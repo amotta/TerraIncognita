@@ -13,7 +13,7 @@ int mapRows;
 int mapCols;
 
 // TODO
-// Same here. Add structure for map
+// Same here. Add structure / array for access field
 int accessRow;
 int accessCol;
 
