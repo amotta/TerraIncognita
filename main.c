@@ -115,7 +115,7 @@ bool readData(){
     readDisplayMode();
     
     if((ok = ok && readMapSize())){
-        mapInit(&map);
+        mapInit(&map, ' ');
     }else{
         map.map = NULL;
     }

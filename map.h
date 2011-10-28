@@ -8,9 +8,10 @@ typedef struct map {
     char* map;
 } map_t;
 
-void mapInit(map_t*);
+void mapInit(map_t*, char);
 void mapFree(map_t*);
 char mapGet(map_t*, unsigned int, unsigned int);
 void mapSet(map_t*, unsigned int, unsigned int, char);
+void mapPrint(map_t*);
 
 #endif
