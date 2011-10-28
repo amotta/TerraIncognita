@@ -3,14 +3,12 @@
 #include <stdbool.h>
 
 #include "main.h"
+#include "map.h"
 
 int dialogMode;
 int displayMode;
 
-// TODO
-// Introduce structure for map
-int mapRows;
-int mapCols;
+map_t map;
 
 // TODO
 // Same here. Add structure / array for access field
@@ -77,8 +75,8 @@ bool readMapSize(){
     printf("\n");
     
     if(rows > 0 && cols > 0){
-        mapRows = rows;
-        mapCols = cols;
+        map.rows = rows;
+        map.cols = cols;
         return true;
     }else{
         printf("ERROR: Map size is invalid\n");
@@ -101,12 +99,12 @@ bool readAccessField(){
     bool onBorder = false;
     
     // check if position is in map
-    if(0 <= row && row < mapRows && 0 <= col && col < mapCols){
+    if(0 <= row && row < map.rows && 0 <= col && col < map.cols){
         inMap = true;
     }
     
     // check if position is on border
-    if(row == 0 || row == mapRows - 1 || col == 0 || col == mapCols - 1){
+    if(row == 0 || row == map.rows - 1 || col == 0 || col == map.cols - 1){
         onBorder = true;
     }
     
