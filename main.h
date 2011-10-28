@@ -15,6 +15,7 @@ bool readAccessField();
 bool readData();
 bool init();
 bool loop();
+bool clean();
 int main();
 
 #endif

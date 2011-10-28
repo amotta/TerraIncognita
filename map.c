@@ -24,7 +24,7 @@ char mapGet(map_t* map, unsigned int row, unsigned int col){
     if(i < map->length){
         return map->map[i];
     }else{
-        return NULL;
+        return 0;
     }
 }
 

@@ -67,9 +67,9 @@ bool readMapSize(){
     printf("ENTER MAP SIZE\n");
     printPrompt();
     
-    int rows = 0;
-    int cols = 0;
-    scanf("%d %d", &rows, &cols);
+    unsigned int rows = 0;
+    unsigned int cols = 0;
+    scanf("%u %u", &rows, &cols);
     
     emptyStdIn();
     printf("\n");
@@ -88,27 +88,19 @@ bool readAccessField(){
     printf("ENTER POSITION OF ACCESS FIELD\n");
     printPrompt();
     
-    int row = 0;
-    int col = 0;
-    scanf("%d %d", &row, &col);
+    unsigned int row = 0;
+    unsigned int col = 0;
+    scanf("%u %u", &row, &col);
     
     emptyStdIn();
     printf("\n");
     
-    bool inMap = false;
-    bool onBorder = false;
-    
-    // check if position is in map
-    if(0 <= row && row < map.rows && 0 <= col && col < map.cols){
-        inMap = true;
-    }
-    
-    // check if position is on border
-    if(row == 0 || row == map.rows - 1 || col == 0 || col == map.cols - 1){
-        onBorder = true;
-    }
-    
-    if(inMap && onBorder){
+    if(
+       // is position on map?
+       row < map.rows && col < map.cols
+       // is position on border?
+       && (row == 0 || row == map.rows - 1 || col == 0 || col == map.cols - 1)
+    ){
         return true;
     }else{
         printf("ERROR: Position of access field is invalid\n");
@@ -117,34 +109,41 @@ bool readAccessField(){
 }
 
 bool readData(){
-    bool valid = true;
+    bool ok = true;
     
     readDialogMode();
     readDisplayMode();
     
-    valid = valid && readMapSize();
-    if(valid){
-        // TODO
-        // initMap
+    if((ok = ok && readMapSize())){
+        mapInit(&map);
+    }else{
+        map.map = NULL;
     }
     
-    valid = valid && readAccessField();
+    ok = ok && readAccessField();
     
-    return true;
+    return ok;
 }
 
 bool init(){
-    readData();
-    return true;
+    bool ok = true;
+    ok = ok && readData();
+    return ok;
 }
 
 bool loop(){
     return true;
 }
 
+bool clean(){
+    mapFree(&map);
+    
+    return true;
+}
+
 int main(){
     init();
     loop();
-    
+    clean();
     return EXIT_SUCCESS;
 }
