@@ -12,6 +12,7 @@ void readDialogMode();
 void readDisplayMode();
 bool readMapSize();
 bool readAccessField();
+bool readNumbRobs();
 bool readData();
 bool init();
 bool loop();

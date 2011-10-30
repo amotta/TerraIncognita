@@ -5,15 +5,18 @@
 #include "main.h"
 #include "map.h"
 
-int dialogMode;
-int displayMode;
+static int dialogMode;
+static int displayMode;
 
-map_t map;
+static map_t map;
 
 // TODO
 // Same here. Add structure / array for access field
-int accessRow;
-int accessCol;
+static unsigned int accessRow;
+static unsigned int accessCol;
+
+// 
+static unsigned int numbRobs;
 
 void emptyStdIn(){
     while(getchar() != '\n');
@@ -101,9 +104,30 @@ bool readAccessField(){
        // is position on border?
        && (row == 0 || row == map.rows - 1 || col == 0 || col == map.cols - 1)
     ){
+        accessRow = row;
+        accessCol = col;
         return true;
     }else{
         printf("ERROR: Position of access field is invalid\n");
+        return false;
+    }
+}
+
+bool readNumbRobs(){
+    printf("ENTER NUMBER OF ROBOTS\n");
+    printPrompt();
+    
+    unsigned int numb = 0;
+    scanf("%u", &numb);
+    
+    emptyStdIn();
+    printf("\n");
+    
+    if(numb > 0){
+        numbRobs = numb;
+        return true;
+    }else{
+        printf("ERROR: Number of robots is invalid\n");
         return false;
     }
 }
@@ -120,7 +144,15 @@ bool readData(){
         map.map = NULL;
     }
     
-    ok = ok && readAccessField();
+    if((ok = ok && readAccessField())){
+        // TODO
+        // map.setAccessField(field)
+    }
+    
+    if((ok = ok && readNumbRobs())){
+        // TODO
+        // robsInit(robSet)
+    }
     
     return ok;
 }
