@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "map.h"
+#include "point.h"
 
 void mapInit(map_t* map, char fill){
     map->length = map->rows * map->cols;
@@ -35,6 +36,10 @@ void mapSet(map_t* map, unsigned int row, unsigned int col, char set){
     if(i < map->length){
         map->map[i] = set;
     }
+}
+
+void mapSetAccessPoint(map_t* map, point_t* point){
+    mapSet(map, point->row, point->col, FIELD_ACCESS);
 }
 
 void mapPrint(map_t* map){

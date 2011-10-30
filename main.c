@@ -137,14 +137,13 @@ bool readData(){
     readDisplayMode();
     
     if((ok = ok && readMapSize())){
-        mapInit(&map, ' ');
+        mapInit(&map, FIELD_EMPTY);
     }else{
         map.map = NULL;
     }
     
     if((ok = ok && readAccessPoint())){
-        // TODO
-        // mapSetAccessPoint(&accessPoint);
+        mapSetAccessPoint(&map, &accessPoint);
     }
     
     if((ok = ok && readNumbRobs())){
