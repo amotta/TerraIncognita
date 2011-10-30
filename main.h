@@ -11,7 +11,7 @@ void printPrompt();
 void readDialogMode();
 void readDisplayMode();
 bool readMapSize();
-bool readAccessField();
+bool readAccessPoint();
 bool readNumbRobs();
 bool readData();
 bool init();

@@ -4,18 +4,16 @@
 
 #include "main.h"
 #include "map.h"
+#include "point.h"
 
 static int dialogMode;
 static int displayMode;
 
 static map_t map;
+static point_t accessPoint;
 
 // TODO
-// Same here. Add structure / array for access field
-static unsigned int accessRow;
-static unsigned int accessCol;
-
-// 
+// Create rob set structure
 static unsigned int numbRobs;
 
 void emptyStdIn(){
@@ -87,8 +85,8 @@ bool readMapSize(){
     }
 }
 
-bool readAccessField(){
-    printf("ENTER POSITION OF ACCESS FIELD\n");
+bool readAccessPoint(){
+    printf("ENTER POSITION OF ACCESS POINT\n");
     printPrompt();
     
     unsigned int row = 0;
@@ -104,8 +102,8 @@ bool readAccessField(){
        // is position on border?
        && (row == 0 || row == map.rows - 1 || col == 0 || col == map.cols - 1)
     ){
-        accessRow = row;
-        accessCol = col;
+        accessPoint.row = row;
+        accessPoint.col = col;
         return true;
     }else{
         printf("ERROR: Position of access field is invalid\n");
@@ -144,9 +142,9 @@ bool readData(){
         map.map = NULL;
     }
     
-    if((ok = ok && readAccessField())){
+    if((ok = ok && readAccessPoint())){
         // TODO
-        // map.setAccessField(field)
+        // mapSetAccessPoint(&accessPoint);
     }
     
     if((ok = ok && readNumbRobs())){
