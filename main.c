@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "main.h"
 #include "map.h"
@@ -15,6 +16,10 @@ static point_t accessPoint;
 // TODO
 // Create rob set structure
 static unsigned int numbRobs;
+
+// TODO
+// same here
+static unsigned int numbObs;
 
 void emptyStdIn(){
     while(getchar() != '\n');
@@ -130,6 +135,72 @@ bool readNumbRobs(){
     }
 }
 
+void readNumbObs(){
+    printf("ENTER NUMBER OF OBSTACLES\n");
+    printPrompt();
+    
+    scanf("%u", &numbObs);
+    
+    emptyStdIn();
+    printf("\n");
+}
+
+bool readObs(){
+    bool ok = true;
+    unsigned int o = 0;
+    unsigned int i = 0;
+    
+    unsigned int start;
+    unsigned int end;
+    
+    char buf[65] = {0};
+    
+    printf("ENTER POSITIONS OF OBSTACLES\n");
+    printPrompt();
+    
+    while(o < numbObs){
+        start = 0;
+        end = 0;
+        
+        // get single coordinate
+        ok = ok && (scanf("%64s", buf) == 1);
+        if(!ok){
+            printf("ERROR: Coordinate too long\n");
+            return false;
+        }
+        
+        if(strchr(buf, '-') == NULL){
+            // isolated notation
+            ok = ok && (sscanf(buf, "%u", &start) == 1);
+            end = start;
+        }else{
+            // range notation
+            ok = ok && (sscanf(buf, "%u-%u", &start, &end) == 2);
+            
+        }
+        
+        if(!ok){
+            printf("ERROR: Could not parse coordinate\n");
+            return false;
+        }
+        
+        // TODO
+        // validate start / end
+        // and then store them
+        
+        i++;
+        if(i == 2){
+            o++;
+            i = 0;
+        }
+    }
+    
+    emptyStdIn();
+    printf("\n");
+    
+    return ok;
+}
+
 bool readData(){
     bool ok = true;
     
@@ -149,6 +220,15 @@ bool readData(){
     if((ok = ok && readNumbRobs())){
         // TODO
         // robsInit(robSet)
+    }
+    
+    readNumbObs();
+    // TODO
+    // obsInit(obsSet)
+    
+    if((ok = ok && readObs())){
+        // TODO
+        // mapAddObs(obsSet)
     }
     
     return ok;
