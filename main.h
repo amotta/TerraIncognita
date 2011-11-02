@@ -3,8 +3,6 @@
 #ifndef TerraIncognita_main_h
 #define TerraIncognita_main_h
 
-#define BUF_LEN 1024
-
 #define MODE_CONSOLE 0
 #define MODE_REDIRECT 1
 
