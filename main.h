@@ -15,6 +15,7 @@ bool readAccessPoint();
 bool readNumbRobs();
 void readNumbObs();
 bool readObs();
+bool readCoord(unsigned int[]);
 bool readData();
 bool init();
 bool loop();

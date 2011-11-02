@@ -149,49 +149,22 @@ bool readObs(){
     bool ok = true;
     unsigned int o = 0;
     unsigned int i = 0;
-    
-    unsigned int start;
-    unsigned int end;
-    
-    char buf[65] = {0};
+    unsigned int coord[2][2];
     
     printf("ENTER POSITIONS OF OBSTACLES\n");
     printPrompt();
     
-    while(o < numbObs){
-        start = 0;
-        end = 0;
-        
-        // get single coordinate
-        ok = ok && (scanf("%64s", buf) == 1);
-        if(!ok){
-            printf("ERROR: Coordinate too long\n");
-            return false;
-        }
-        
-        if(strchr(buf, '-') == NULL){
-            // isolated notation
-            ok = ok && (sscanf(buf, "%u", &start) == 1);
-            end = start;
-        }else{
-            // range notation
-            ok = ok && (sscanf(buf, "%u-%u", &start, &end) == 2);
-            
-        }
-        
-        if(!ok){
-            printf("ERROR: Could not parse coordinate\n");
-            return false;
-        }
+    while(ok && o < numbObs){
+        ok = ok && readCoord(coord[i]);
         
         // TODO
-        // validate start / end
-        // and then store them
+        // simplifyCoord
+        // obst = obstFromCoord(coord)
+        // obstIsValid(obst)
+        // obstSetAdd(obst)
         
-        i++;
-        if(i == 2){
+        if((i = ++i % 2) == 0){
             o++;
-            i = 0;
         }
     }
     
@@ -199,6 +172,42 @@ bool readObs(){
     printf("\n");
     
     return ok;
+}
+
+bool readCoord(unsigned int coord[]){
+    bool ok = true;
+    char buf[65] = {0};
+    unsigned int start = 0;
+    unsigned int end = 0;
+    
+    // get single coordinate
+    if(scanf("%64s", buf) < 1){
+        printf("ERROR: Coordinate too long\n");
+        return false;
+    }
+    
+    if(strchr(buf, '-') == NULL){
+        // isolated notation
+        if(sscanf(buf, "%u", &start) < 1){
+            ok = false;
+        }else{
+            end = start;
+        }
+    }else{
+        // range notation
+        if(sscanf(buf, "%u-%u", &start, &end) < 2){
+            ok = false;
+        }
+    }
+    
+    if(ok){
+        coord[0] = start;
+        coord[1] = end;
+        return true;
+    }else{
+        printf("ERROR: Could not parse coordinate\n");
+        return false;
+    }
 }
 
 bool readData(){
