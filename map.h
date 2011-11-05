@@ -1,8 +1,6 @@
 #ifndef TerraIncognita_map_h
 #define TerraIncognita_map_h
 
-#include "point.h"
-
 #define FIELD_EMPTY ' '
 #define FIELD_ACCESS 'A'
 
@@ -12,6 +10,8 @@ typedef struct map {
     unsigned int length;
     char* map;
 } map_t;
+
+#include "point.h"
 
 void mapInit(map_t*, char);
 void mapFree(map_t*);

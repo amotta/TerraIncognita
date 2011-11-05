@@ -136,7 +136,7 @@ bool readNumbRobs(){
     }
 }
 
-bool readNumbObs(){
+bool readNumbObsts(){
     printf("ENTER NUMBER OF OBSTACLES\n");
     printPrompt();
     
@@ -149,7 +149,7 @@ bool readNumbObs(){
     return true;
 }
 
-bool readObs(){
+bool readObsts(){
     bool ok = true;
     unsigned int o;
     unsigned int i;
@@ -234,8 +234,8 @@ bool readData(){
     ok = ok && readMapSize();
     ok = ok && readAccessPoint();
     ok = ok && readNumbRobs();
-    ok = ok && readNumbObs();
-    ok = ok && readObs();
+    ok = ok && readNumbObsts();
+    ok = ok && readObsts();
     
     return ok;
 }

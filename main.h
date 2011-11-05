@@ -1,10 +1,10 @@
-#include <stdbool.h>
-
 #ifndef TerraIncognita_main_h
 #define TerraIncognita_main_h
 
 #define MODE_CONSOLE 0
 #define MODE_REDIRECT 1
+
+#include <stdbool.h>
 
 void emptyStdIn();
 void printPrompt();
@@ -13,8 +13,8 @@ bool readDisplayMode();
 bool readMapSize();
 bool readAccessPoint();
 bool readNumbRobs();
-bool readNumbObs();
-bool readObs();
+bool readNumbObsts();
+bool readObsts();
 bool readCoord(unsigned int*);
 bool readData();
 void init();

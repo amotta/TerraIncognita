@@ -1,10 +1,7 @@
 #ifndef TerraIncognita_obstacle_h
 #define TerraIncognita_obstacle_h
 
-#include <stdbool.h>
-
 #include "point.h"
-#include "map.h"
 
 typedef struct obst {
     point_t topLeft;
@@ -15,6 +12,9 @@ typedef struct obstSet {
     unsigned int length;
     obst_t* set;
 } obstSet_t;
+
+#include <stdbool.h>
+#include "map.h"
 
 void obstPrint(obst_t*);
 bool obstInMap(obst_t*, map_t*);
