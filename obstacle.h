@@ -13,6 +13,7 @@ typedef struct obstSet {
     obst_t* set;
 } obstSet_t;
 
+void obstPrint(obst_t*);
 void obstSetInit(obstSet_t*);
 void obstSetFree(obstSet_t*);
 

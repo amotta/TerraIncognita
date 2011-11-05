@@ -148,6 +148,7 @@ bool readObs(){
     bool ok = true;
     unsigned int o = 0;
     unsigned int i = 0;
+    obst_t obst;
     unsigned int coord[2][2];
     
     printf("ENTER POSITIONS OF OBSTACLES\n");
@@ -156,13 +157,20 @@ bool readObs(){
     while(ok && o < obstSet.length){
         ok = ok && readCoord(coord[i]);
         
-        // TODO
-        // obst = obstFromCoord(coord)
-        // obstIsValid(obst)
-        // obstSetAdd(obst)
-        
-        i = ++i % 2;
+        i++;
+        i = i % 2;
         if(i == 0){
+            obst.topLeft.row = coord[0][0];
+            obst.topLeft.col = coord[1][0];
+            obst.bottomRight.row = coord[0][1];
+            obst.bottomRight.col = coord[1][1];
+            
+            obstPrint(&obst);
+            
+            // TODO
+            // obstIsValid(obst)
+            // obstSetAdd(obst)
+            
             o++;
         }
     }
@@ -173,7 +181,7 @@ bool readObs(){
     return ok;
 }
 
-bool readCoord(unsigned int coord[]){
+bool readCoord(unsigned int* coord){
     bool ok = true;
     char buf[65] = {0};
     unsigned int start = 0;
