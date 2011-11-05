@@ -99,23 +99,13 @@ bool readAccessPoint(){
     printf("ENTER POSITION OF ACCESS POINT\n");
     printPrompt();
     
-    unsigned int row = 0;
-    unsigned int col = 0;
-    scanf("%u %u", &row, &col);
+    scanf("%u %u", &accessPoint.row, &accessPoint.col);
     
     emptyStdIn();
     printf("\n");
     
-    if(
-       // is position on map?
-       row < map.rows && col < map.cols
-       // is position on border?
-       && (row == 0 || row == map.rows - 1 || col == 0 || col == map.cols - 1)
-    ){
-        accessPoint.row = row;
-        accessPoint.col = col;
+    if(pointInMap(&accessPoint, &map) && pointOnBorder(&accessPoint, &map)){
         mapSetAccessPoint(&map, &accessPoint);
-        
         return true;
     }else{
         printf("ERROR: Position of access field is invalid\n");
@@ -178,6 +168,8 @@ bool readObs(){
         obst.topLeft.col = coord[1][0];
         obst.bottomRight.row = coord[0][1];
         obst.bottomRight.col = coord[1][1];
+        
+        ok = ok && obstInMap(&obst, &map);
         
         // TODO
         // obstIsValid(obst)
