@@ -8,18 +8,18 @@
 
 void emptyStdIn();
 void printPrompt();
-void readDialogMode();
-void readDisplayMode();
+bool readDialogMode();
+bool readDisplayMode();
 bool readMapSize();
 bool readAccessPoint();
 bool readNumbRobs();
-void readNumbObs();
+bool readNumbObs();
 bool readObs();
 bool readCoord(unsigned int*);
 bool readData();
-bool init();
-bool loop();
-bool clean();
+void init();
+void loop();
+void clean();
 int main();
 
 #endif

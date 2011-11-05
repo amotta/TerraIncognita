@@ -30,7 +30,7 @@ void printPrompt(){
     fflush(stdout);
 }
 
-void readDialogMode(){
+bool readDialogMode(){
     printf("SELECT DIALOG MODE\n");
     printf("0\tDialog\n");
     printf("1\tRedirection\n");
@@ -47,9 +47,11 @@ void readDialogMode(){
     
     emptyStdIn();
     printf("\n");
+    
+    return true;
 }
 
-void readDisplayMode(){
+bool readDisplayMode(){
     printf("SELECT DISPLAY MODE\n");
     printf("0\tComplete\n");
     printf("1\tRedirection\n");
@@ -66,6 +68,8 @@ void readDisplayMode(){
     
     emptyStdIn();
     printf("\n");
+    
+    return true;
 }
 
 bool readMapSize(){
@@ -82,6 +86,8 @@ bool readMapSize(){
     if(rows > 0 && cols > 0){
         map.rows = rows;
         map.cols = cols;
+        mapInit(&map, FIELD_EMPTY);
+        
         return true;
     }else{
         printf("ERROR: Map size is invalid\n");
@@ -108,6 +114,8 @@ bool readAccessPoint(){
     ){
         accessPoint.row = row;
         accessPoint.col = col;
+        mapSetAccessPoint(&map, &accessPoint);
+        
         return true;
     }else{
         printf("ERROR: Position of access field is invalid\n");
@@ -127,6 +135,10 @@ bool readNumbRobs(){
     
     if(numb > 0){
         numbRobs = numb;
+        
+        // TODO
+        // robsInit(robSet)
+        
         return true;
     }else{
         printf("ERROR: Number of robots is invalid\n");
@@ -134,14 +146,17 @@ bool readNumbRobs(){
     }
 }
 
-void readNumbObs(){
+bool readNumbObs(){
     printf("ENTER NUMBER OF OBSTACLES\n");
     printPrompt();
     
     scanf("%u", &obstSet.length);
+    obstSetInit(&obstSet);
     
     emptyStdIn();
     printf("\n");
+    
+    return true;
 }
 
 bool readObs(){
@@ -222,56 +237,37 @@ bool readCoord(unsigned int* coord){
 
 bool readData(){
     bool ok = true;
-    
-    readDialogMode();
-    readDisplayMode();
-    
-    if((ok = ok && readMapSize())){
-        mapInit(&map, FIELD_EMPTY);
-    }else{
-        map.map = NULL;
-    }
-    
-    if((ok = ok && readAccessPoint())){
-        mapSetAccessPoint(&map, &accessPoint);
-    }
-    
-    if((ok = ok && readNumbRobs())){
-        // TODO
-        // robsInit(robSet)
-    }
-    
-    readNumbObs();
-    obstSetInit(&obstSet);
-    
-    if((ok = ok && readObs())){
-        // TODO
-        // mapAddObs(obsSet)
-    }
+    ok = ok && readDialogMode();
+    ok = ok && readDisplayMode();
+    ok = ok && readMapSize();
+    ok = ok && readAccessPoint();
+    ok = ok && readNumbRobs();
+    ok = ok && readNumbObs();
+    ok = ok && readObs();
     
     return ok;
 }
 
-bool init(){
-    bool ok = true;
-    ok = ok && readData();
-    return ok;
+void init(){
+    map.map = NULL;
+    obstSet.set = NULL;
+    
+    readData();
 }
 
-bool loop(){
-    return true;
+void loop(){
+    // TODO
 }
 
-bool clean(){
+void clean(){
     mapFree(&map);
     obstSetFree(&obstSet);
-    
-    return true;
 }
 
 int main(){
     init();
     loop();
     clean();
+    
     return EXIT_SUCCESS;
 }
