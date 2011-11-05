@@ -14,5 +14,6 @@ typedef struct obstSet {
 } obstSet_t;
 
 void obstSetInit(obstSet_t*);
+void obstSetFree(obstSet_t*);
 
 #endif
