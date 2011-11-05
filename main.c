@@ -170,6 +170,9 @@ bool readObsts(){
         obst.bottomRight.col = coord[1][1];
         
         ok = ok && obstInMap(&obst, &map);
+        if(!ok){
+            printf("ERROR: Obstacles is not in map\n");
+        }
         
         // TODO
         // obstIsValid(obst)
