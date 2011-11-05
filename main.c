@@ -157,12 +157,12 @@ bool readObs(){
         ok = ok && readCoord(coord[i]);
         
         // TODO
-        // simplifyCoord
         // obst = obstFromCoord(coord)
         // obstIsValid(obst)
         // obstSetAdd(obst)
         
-        if((i = ++i % 2) == 0){
+        i = ++i % 2;
+        if(i == 0){
             o++;
         }
     }
