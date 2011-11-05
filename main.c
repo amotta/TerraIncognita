@@ -190,18 +190,27 @@ bool readCoord(unsigned int coord[]){
         if(sscanf(buf, "%u", &start) < 1){
             ok = false;
         }else{
-            end = start;
+            coord[0] = start;
+            coord[1] = start;
         }
     }else{
         // range notation
         if(sscanf(buf, "%u-%u", &start, &end) < 2){
             ok = false;
+        }else{
+            // check order
+            if(start < end){
+                coord[0] = start;
+                coord[1] = end;
+            }else{
+                printf("WARNING: Fixed coordinate order\n");
+                coord[0] = end;
+                coord[1] = start;
+            }
         }
     }
     
     if(ok){
-        coord[0] = start;
-        coord[1] = end;
         return true;
     }else{
         printf("ERROR: Could not parse coordinate\n");
