@@ -10,6 +10,7 @@ typedef struct obst {
 
 typedef struct obstSet {
     unsigned int length;
+    unsigned int numbObsts;
     obst_t* set;
 } obstSet_t;
 
@@ -18,6 +19,8 @@ typedef struct obstSet {
 
 void obstPrint(obst_t*);
 bool obstInMap(obst_t*, map_t*);
+bool obstOnBorder(obst_t*, map_t*);
+bool obstIsSeparate(obst_t*, obstSet_t*);
 void obstSetInit(obstSet_t*);
 void obstSetFree(obstSet_t*);
 

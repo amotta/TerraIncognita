@@ -172,10 +172,22 @@ bool readObsts(){
         ok = ok && obstInMap(&obst, &map);
         if(!ok){
             printf("ERROR: Obstacles is not in map\n");
+            break;
+        }
+        
+        ok = ok && !obstOnBorder(&obst, &map);
+        if(!ok){
+            printf("ERROR: Obstacles is on border\n");
+            break;
+        }
+        
+        ok = ok && obstIsSeparate(&obst, &obstSet);
+        if(!ok){
+            printf("ERROR: Not enough space to other obstacles\n");
+            break;
         }
         
         // TODO
-        // obstIsValid(obst)
         // obstSetAdd(obst)
     }
     

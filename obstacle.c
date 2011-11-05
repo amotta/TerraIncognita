@@ -21,7 +21,37 @@ bool obstInMap(obst_t* obst, map_t* map){
     }
 }
 
+bool obstOnBorder(obst_t* obst, map_t* map){
+    if(
+       pointOnBorder(&obst->topLeft, map)
+       || pointOnBorder(&obst->bottomRight, map)
+    ){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool obstIsSeparate(obst_t* obst, obstSet_t* obstSet){
+    int i;
+    bool separate = true;
+    
+    for(i = 0; separate && i < obstSet->numbObsts; i++){
+        if(
+           obst->topLeft.row - 1 <= obstSet->set[i].bottomRight.row
+           && obst->bottomRight.row + 1 >= obstSet->set[i].topLeft.row
+           && obst->topLeft.col - 1 <= obstSet->set[i].bottomRight.col
+           && obst->bottomRight.col + 1 >= obstSet->set[i].topLeft.col
+        ){
+            separate = false;
+        }
+    }
+    
+    return separate;
+}
+
 void obstSetInit(obstSet_t* set){
+    set->numbObsts = 0;
     set->set = (obst_t*) malloc(set->length * sizeof(obst_t));
 }
 
