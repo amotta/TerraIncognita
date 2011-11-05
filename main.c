@@ -6,6 +6,7 @@
 #include "main.h"
 #include "map.h"
 #include "point.h"
+#include "obstacle.h"
 
 static int dialogMode;
 static int displayMode;
@@ -17,9 +18,7 @@ static point_t accessPoint;
 // Create rob set structure
 static unsigned int numbRobs;
 
-// TODO
-// same here
-static unsigned int numbObs;
+static obstSet_t obstSet;
 
 void emptyStdIn(){
     while(getchar() != '\n');
@@ -139,7 +138,7 @@ void readNumbObs(){
     printf("ENTER NUMBER OF OBSTACLES\n");
     printPrompt();
     
-    scanf("%u", &numbObs);
+    scanf("%u", &obstSet.length);
     
     emptyStdIn();
     printf("\n");
@@ -154,7 +153,7 @@ bool readObs(){
     printf("ENTER POSITIONS OF OBSTACLES\n");
     printPrompt();
     
-    while(ok && o < numbObs){
+    while(ok && o < obstSet.length){
         ok = ok && readCoord(coord[i]);
         
         // TODO
@@ -232,8 +231,7 @@ bool readData(){
     }
     
     readNumbObs();
-    // TODO
-    // obsInit(obsSet)
+    obstSetInit(&obstSet);
     
     if((ok = ok && readObs())){
         // TODO
@@ -255,6 +253,7 @@ bool loop(){
 
 bool clean(){
     mapFree(&map);
+    obstSetFree(&obstSet);
     
     return true;
 }
