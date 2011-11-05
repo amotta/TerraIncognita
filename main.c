@@ -146,33 +146,27 @@ void readNumbObs(){
 
 bool readObs(){
     bool ok = true;
-    unsigned int o = 0;
-    unsigned int i = 0;
+    unsigned int o;
+    unsigned int i;
+    
     obst_t obst;
     unsigned int coord[2][2];
     
     printf("ENTER POSITIONS OF OBSTACLES\n");
-    printPrompt();
     
-    while(ok && o < obstSet.length){
-        ok = ok && readCoord(coord[i]);
-        
-        i++;
-        i = i % 2;
-        if(i == 0){
-            obst.topLeft.row = coord[0][0];
-            obst.topLeft.col = coord[1][0];
-            obst.bottomRight.row = coord[0][1];
-            obst.bottomRight.col = coord[1][1];
-            
-            obstPrint(&obst);
-            
-            // TODO
-            // obstIsValid(obst)
-            // obstSetAdd(obst)
-            
-            o++;
+    for(o = 0; ok && o < obstSet.length; o++){
+        for(i = 0; ok && i < 2; i++){
+            ok = ok && readCoord(coord[i]);
         }
+        
+        obst.topLeft.row = coord[0][0];
+        obst.topLeft.col = coord[1][0];
+        obst.bottomRight.row = coord[0][1];
+        obst.bottomRight.col = coord[1][1];
+        
+        // TODO
+        // obstIsValid(obst)
+        // obstSetAdd(obst)
     }
     
     emptyStdIn();
