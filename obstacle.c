@@ -6,6 +6,13 @@
 #include "point.h"
 #include "map.h"
 
+void obstAssign(obst_t* dest, obst_t* source){
+    dest->topLeft.row = source->topLeft.row;
+    dest->topLeft.col = source->topLeft.col;
+    dest->bottomRight.row = source->bottomRight.row;
+    dest->bottomRight.col = source->bottomRight.col;
+}
+
 void obstPrint(obst_t* obst){
     printf("%u|%u\t", obst->topLeft.row, obst->topLeft.col);
     printf("%u|%u\n", obst->topLeft.row, obst->bottomRight.col);
@@ -53,6 +60,13 @@ bool obstIsSeparate(obst_t* obst, obstSet_t* obstSet){
 void obstSetInit(obstSet_t* set){
     set->numbObsts = 0;
     set->set = (obst_t*) malloc(set->length * sizeof(obst_t));
+}
+
+void obstSetAdd(obstSet_t* set, obst_t* obst){
+    if(set->numbObsts < set->length){
+        obstAssign(&set->set[set->numbObsts], obst);
+        set->numbObsts++;
+    }
 }
 
 void obstSetFree(obstSet_t* set){

@@ -17,11 +17,13 @@ typedef struct obstSet {
 #include <stdbool.h>
 #include "map.h"
 
+void obstAssign(obst_t*, obst_t*);
 void obstPrint(obst_t*);
 bool obstInMap(obst_t*, map_t*);
 bool obstOnBorder(obst_t*, map_t*);
 bool obstIsSeparate(obst_t*, obstSet_t*);
 void obstSetInit(obstSet_t*);
+void obstSetAdd(obstSet_t*, obst_t*);
 void obstSetFree(obstSet_t*);
 
 #endif

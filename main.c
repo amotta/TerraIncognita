@@ -187,8 +187,7 @@ bool readObsts(){
             break;
         }
         
-        // TODO
-        // obstSetAdd(obst)
+        obstSetAdd(&obstSet, &obst);
     }
     
     emptyStdIn();
