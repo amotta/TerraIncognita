@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include "obstacle.h"
 #include "point.h"
 #include "map.h"
+#include "obstacle.h"
 
 void obstAssign(obst_t* dest, obst_t* source){
     dest->topLeft.row = source->topLeft.row;

@@ -190,6 +190,10 @@ bool readObsts(){
         obstSetAdd(&obstSet, &obst);
     }
     
+    if(ok){
+        mapAddObstacles(&map, &obstSet);
+    }
+    
     emptyStdIn();
     printf("\n");
     
@@ -258,7 +262,12 @@ void init(){
     map.map = NULL;
     obstSet.set = NULL;
     
-    readData();
+    bool ok = true;
+    ok = ok && readData();
+    
+    if(ok){
+        mapPrint(&map);
+    }
 }
 
 void loop(){
