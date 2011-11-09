@@ -202,38 +202,25 @@ bool readObsts(){
 
 bool readCoord(unsigned int* coord){
     bool ok = true;
-    char buf[65] = {0};
+    char sign;
     unsigned int start = 0;
     unsigned int end = 0;
     
-    // get single coordinate
-    if(scanf("%64s", buf) < 1){
-        printf("ERROR: Coordinate too long\n");
-        return false;
-    }
-    
-    if(strchr(buf, '-') == NULL){
-        // isolated notation
-        if(sscanf(buf, "%u", &start) < 1){
-            ok = false;
-        }else{
-            coord[0] = start;
-            coord[1] = start;
-        }
+    if(scanf(" %u%c", &start, &sign) < 2){
+        ok = false;
     }else{
-        // range notation
-        if(sscanf(buf, "%u-%u", &start, &end) < 2){
-            ok = false;
-        }else{
-            // check order
-            if(start < end){
-                coord[0] = start;
-                coord[1] = end;
+        coord[0] = start;
+        
+        if(sign == '-'){
+            if(scanf(" %u", &end) < 1){
+                ok = false;
             }else{
-                printf("WARNING: Fixed coordinate order\n");
-                coord[0] = end;
-                coord[1] = start;
+                // range notation
+                coord[1] = end;
             }
+        }else{
+            // isolated notation
+            coord[1] = start;
         }
     }
     
