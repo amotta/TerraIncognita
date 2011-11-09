@@ -62,12 +62,24 @@ void mapSetAccessPoint(map_t* map, point_t* point){
 void mapPrint(map_t* map){
     unsigned int i, j;
     for(i = 0; i < map->rows; i++){
-        for(j = 0; j < map->cols; j++){
-            putchar(mapGet(map, i, j));
+        for(j = 0; j < 2 * map->cols + 1; j++){
+            putchar('-');
         }
         
         putchar('\n');
+        
+        for(j = 0; j < map->cols; j++){
+            putchar('|');
+            putchar(mapGet(map, i, j));
+        }
+        
+        putchar('|');
+        putchar('\n');
     }
     
-    fflush(stdout);
+    for(j = 0; j < 2 * map->cols; j++){
+        putchar('-');
+    }
+    
+    putchar('\n');
 }
