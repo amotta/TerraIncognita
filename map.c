@@ -47,8 +47,8 @@ void mapAddObstacles(map_t* map, obstSet_t* obstSet){
     for(i = 0; i < obstSet->numbObsts; i++){
         obst = &obstSet->set[i];
         
-        for(r = obst->topLeft.row; r < obst->bottomRight.row; r++){
-            for(c = obst->topLeft.col; c < obst->bottomRight.col; c++){
+        for(r = obst->topLeft.row; r <= obst->bottomRight.row; r++){
+            for(c = obst->topLeft.col; c <= obst->bottomRight.col; c++){
                 mapSet(map, r, c, FIELD_OBSTACLE);
             }
         }
