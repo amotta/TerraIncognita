@@ -57,6 +57,16 @@ bool obstIsSeparate(obst_t* obst, obstSet_t* obstSet){
     return separate;
 }
 
+void obstSetPrint(obstSet_t* set){
+    int i;
+    
+    printf("ObstacleSet contains %d obstacles\n", set->numbObsts);
+    
+    for(i = 0; i < set->numbObsts; i++){
+        obstPrint(&(set->set[i]));
+    }
+}
+
 void obstSetInit(obstSet_t* set){
     set->numbObsts = 0;
     set->set = (obst_t*) malloc(set->length * sizeof(obst_t));
@@ -64,7 +74,7 @@ void obstSetInit(obstSet_t* set){
 
 void obstSetAdd(obstSet_t* set, obst_t* obst){
     if(set->numbObsts < set->length){
-        obstAssign(&set->set[set->numbObsts], obst);
+        obstAssign(&(set->set[set->numbObsts]), obst);
         set->numbObsts++;
     }
 }
