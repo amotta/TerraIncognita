@@ -3,14 +3,16 @@
 
 #include "point.h"
 
-typedef struct obst {
-    point_t topLeft;
-    point_t bottomRight;
+typedef struct {
+    unsigned int top;
+    unsigned int bottom;
+    unsigned int left;
+    unsigned int right;
 } obst_t;
 
 typedef struct obstSet {
     unsigned int length;
-    unsigned int numbObsts;
+    unsigned int used;
     obst_t* set;
 } obstSet_t;
 
