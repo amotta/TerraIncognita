@@ -37,7 +37,10 @@ bool readDialogMode(){
     printPrompt();
     
     int in = 0;
-    scanf("%d", &in);
+    if(scanf("%d", &in) < 1){
+        printf("ERROR: Invalid input\n");
+        return false;
+    }
     
     if(in){
         dialogMode = MODE_REDIRECT;
@@ -58,7 +61,10 @@ bool readDisplayMode(){
     printPrompt();
     
     int in = 0;
-    scanf("%d", &in);
+    if(scanf("%d", &in) < 1){
+        printf("ERROR: Invalid input\n");
+        return false;
+    }
     
     if(in){
         displayMode = MODE_REDIRECT;
@@ -73,74 +79,109 @@ bool readDisplayMode(){
 }
 
 bool readMapSize(){
+    int rows = 0;
+    int cols = 0; 
+    
     printf("ENTER MAP SIZE\n");
-    printPrompt();
+    printPrompt(); 
     
-    unsigned int rows = 0;
-    unsigned int cols = 0;
-    scanf("%u %u", &rows, &cols);
+    if(scanf("%d %d", &rows, &cols) < 2){
+        printf("ERROR: Invalid input\n");
+        return false;
+    }
     
-    emptyStdIn();
-    printf("\n");
-    
-    if(rows > 0 && cols > 0){
-        map.rows = rows;
-        map.cols = cols;
-        mapInit(&map, FIELD_EMPTY);
-        
-        return true;
-    }else{
+    if(rows < 0 || cols < 0){
         printf("ERROR: Map size is invalid\n");
         return false;
     }
+    
+    map.rows = rows;
+    map.cols = cols;
+    mapInit(&map, FIELD_EMPTY);
+    
+    emptyStdIn();
+    printf("\n");
+    
+    return true;
 }
 
 bool readAccessPoint(){
+    int rows = 0;
+    int cols = 0;
+    
     printf("ENTER POSITION OF ACCESS POINT\n");
     printPrompt();
     
-    scanf("%u %u", &accessPoint.row, &accessPoint.col);
+    if(scanf("%d %d", &rows, &cols) < 2){
+        printf("ERROR: Invalid input\n");
+        return false;
+    }
+    
+    if(rows < 0 || cols < 0){
+        printf("ERROR: Negative coordinate\n");
+        return false;
+    }
+    
+    accessPoint.row = rows;
+    accessPoint.col = cols;
+    
+    if(!pointInMap(&accessPoint, &map)){
+        printf("ERROR: Access point out of bounds\n");
+        return false;
+    }
+    
+    mapSetAccessPoint(&map, &accessPoint);
     
     emptyStdIn();
     printf("\n");
     
-    if(pointInMap(&accessPoint, &map) && pointOnBorder(&accessPoint, &map)){
-        mapSetAccessPoint(&map, &accessPoint);
-        return true;
-    }else{
-        printf("ERROR: Position of access field is invalid\n");
-        return false;
-    }
+    return true;
 }
 
 bool readNumbRobs(){
+    int numb;
+    
     printf("ENTER NUMBER OF ROBOTS\n");
     printPrompt();
     
-    unsigned int numb = 0;
-    scanf("%u", &numb);
+    if(scanf("%d", &numb) < 1){
+        printf("ERROR: Invalid input\n");
+        return false;
+    }
+    
+    if(numb < 1){
+        printf("ERROR: Number of robots is invalid\n");
+        return false;
+    }
+    
+    numbRobs = numb;
+    
+    // TODO
+    // robsInit(robSet)
     
     emptyStdIn();
     printf("\n");
     
-    if(numb > 0){
-        numbRobs = numb;
-        
-        // TODO
-        // robsInit(robSet)
-        
-        return true;
-    }else{
-        printf("ERROR: Number of robots is invalid\n");
-        return false;
-    }
+    return true;
 }
 
 bool readNumbObsts(){
+    int numb;
+    
     printf("ENTER NUMBER OF OBSTACLES\n");
     printPrompt();
     
-    scanf("%u", &obstSet.length);
+    if(scanf("%d", &numb) < 1){
+        printf("ERROR: Invalid input\n");
+        return false;
+    }
+    
+    if(numb < 0){
+        printf("ERROR: Invalid number of obstacles\n");
+        return false;
+    }
+    
+    obstSet.length = numb;
     obstSetInit(&obstSet);
     
     emptyStdIn();
@@ -150,7 +191,6 @@ bool readNumbObsts(){
 }
 
 bool readObsts(){
-    bool ok = true;
     unsigned int o;
     unsigned int i;
     
@@ -159,9 +199,11 @@ bool readObsts(){
     
     printf("ENTER POSITIONS OF OBSTACLES\n");
     
-    for(o = 0; ok && o < obstSet.length; o++){
-        for(i = 0; ok && i < 2; i++){
-            ok = ok && readCoord(coord[i]);
+    for(o = 0; o < obstSet.length; o++){
+        for(i = 0; i < 2; i++){
+            if(!readCoord(coord[i])){
+                return false;
+            }
         }
         
         obst.topLeft.row = coord[0][0];
@@ -169,67 +211,60 @@ bool readObsts(){
         obst.bottomRight.row = coord[0][1];
         obst.bottomRight.col = coord[1][1];
         
-        ok = ok && obstInMap(&obst, &map);
-        if(!ok){
-            printf("ERROR: Obstacles is not in map\n");
-            break;
+        if(!obstInMap(&obst, &map)){
+            printf("ERROR: Obstacles not in map\n");
+            return false;
         }
         
-        ok = ok && !obstOnBorder(&obst, &map);
-        if(!ok){
-            printf("ERROR: Obstacles is on border\n");
-            break;
+        if(obstOnBorder(&obst, &map)){
+            printf("ERROR: Obstacles on border\n");
+            return false;
         }
         
-        ok = ok && obstIsSeparate(&obst, &obstSet);
-        if(!ok){
-            printf("ERROR: Not enough space to other obstacles\n");
-            break;
+        if(!obstIsSeparate(&obst, &obstSet)){
+            printf("ERROR: Not enough space between obstacles\n");
+            return false;
         }
         
         obstSetAdd(&obstSet, &obst);
     }
     
-    if(ok){
-        mapAddObstacles(&map, &obstSet);
-    }
+    mapAddObstacles(&map, &obstSet);
     
     emptyStdIn();
     printf("\n");
     
-    return ok;
+    return true;
 }
 
 bool readCoord(unsigned int* coord){
-    bool ok = true;
-    char sign;
-    unsigned int start = 0;
-    unsigned int end = 0;
+    int start;
+    int end;
     
-    if(scanf(" %u%c", &start, &sign) < 2){
-        ok = false;
-    }else{
-        coord[0] = start;
-        
-        if(sign == '-'){
-            if(scanf(" %u", &end) < 1){
-                ok = false;
-            }else{
-                // range notation
-                coord[1] = end;
-            }
-        }else{
-            // isolated notation
-            coord[1] = start;
-        }
-    }
-    
-    if(ok){
-        return true;
-    }else{
-        printf("ERROR: Could not parse coordinate\n");
+    if(scanf("%d", &start) < 1){
+        printf("ERROR: Invalid input\n");
         return false;
     }
+    
+    if(getchar() == '-'){
+        // range notation
+        if(scanf("%d", &end) < 1){
+            printf("ERROR: Invalid input\n");
+            return false;
+        }
+    }else{
+        // isolated notation
+        end = start;
+    }
+    
+    if(start < 0 || end < 0){
+        printf("ERROR: Negative coordinate\n");
+    }
+    
+    coord[0] = start;
+    coord[1] = end;
+    
+    return true;
 }
 
 bool readData(){
@@ -246,10 +281,11 @@ bool readData(){
 }
 
 void init(){
+    bool ok = true;
+    
     map.map = NULL;
     obstSet.set = NULL;
-    
-    bool ok = true;
+
     ok = ok && readData();
     
     if(ok){
