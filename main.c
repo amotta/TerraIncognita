@@ -191,25 +191,20 @@ bool readNumbObsts(){
 }
 
 bool readObsts(){
+    obst_t obst;
     unsigned int o;
     unsigned int i;
-    
-    obst_t obst;
-    unsigned int coord[2][2];
     
     printf("ENTER POSITIONS OF OBSTACLES\n");
     
     for(o = 0; o < obstSet.length; o++){
-        for(i = 0; i < 2; i++){
-            if(!readCoord(coord[i])){
-                return false;
-            }
+        if(!readCoord(&(obst.top))){
+            return false;
         }
-        
-        obst.topLeft.row = coord[0][0];
-        obst.topLeft.col = coord[1][0];
-        obst.bottomRight.row = coord[0][1];
-        obst.bottomRight.col = coord[1][1];
+           
+        if(!readCoord(&(obst.left))){
+            return false;
+        }
         
         if(!obstInMap(&obst, &map)){
             printf("ERROR: Obstacles not in map\n");
