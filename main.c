@@ -8,25 +8,20 @@
 #include "obstacle.h"
 #include "point.h"
 
-void emptyStdIn(){
+void emptyStdIn(void){
     while(getchar() != '\n');
 }
 
-void printPrompt(){
+void printPrompt(void){
     putchar('>');
     putchar(' ');
     fflush(stdout);
 }
 
 bool readDialogMode(terra_t* env){
-    printf("SELECT DIALOG MODE\n");
-    printf("0\tDialog\n");
-    printf("1\tRedirection\n");
-    printPrompt();
-    
     int in;
     if(scanf("%d", &in) < 1){
-        printf("ERROR: Invalid input\n");
+        ERROR("Invalid input\n")
         return false;
     }
     
@@ -37,20 +32,22 @@ bool readDialogMode(terra_t* env){
     }
     
     emptyStdIn();
-    printf("\n");
+    DIALOG("\n")
     
     return true;
 }
 
 bool readDisplayMode(terra_t* env){
-    printf("SELECT DISPLAY MODE\n");
-    printf("0\tComplete\n");
-    printf("1\tRedirection\n");
-    printPrompt();
+    DIALOG(
+        "SELECT DISPLAY MODE\n"
+        "0\tComplete\n"
+        "1\tRedirection\n"
+    )
+    PROMPT()
     
     int in = 0;
     if(scanf("%d", &in) < 1){
-        printf("ERROR: Invalid input\n");
+        ERROR("Invalid input\n")
         return false;
     }
     
@@ -61,7 +58,7 @@ bool readDisplayMode(terra_t* env){
     }
     
     emptyStdIn();
-    printf("\n");
+    DIALOG("\n")
     
     return true;
 }
@@ -70,16 +67,16 @@ bool readMapSize(terra_t* env){
     int rows = 0;
     int cols = 0; 
     
-    printf("ENTER MAP SIZE\n");
-    printPrompt(); 
+    DIALOG("ENTER MAP SIZE\n")
+    PROMPT()
     
     if(scanf("%d %d", &rows, &cols) < 2){
-        printf("ERROR: Invalid input\n");
+        ERROR("Invalid input\n")
         return false;
     }
     
     if(rows < 0 || cols < 0){
-        printf("ERROR: Map size is invalid\n");
+        ERROR("Map size is invalid\n")
         return false;
     }
     
@@ -88,7 +85,7 @@ bool readMapSize(terra_t* env){
     mapInit(&env->map, FIELD_EMPTY);
     
     emptyStdIn();
-    printf("\n");
+    DIALOG("\n")
     
     return true;
 }
@@ -97,16 +94,16 @@ bool readAccessPoint(terra_t* env){
     int rows = 0;
     int cols = 0;
     
-    printf("ENTER POSITION OF ACCESS POINT\n");
-    printPrompt();
+    DIALOG("ENTER POSITION OF ACCESS POINT\n")
+    PROMPT()
     
     if(scanf("%d %d", &rows, &cols) < 2){
-        printf("ERROR: Invalid input\n");
+        ERROR("Invalid input\n")
         return false;
     }
     
     if(rows < 0 || cols < 0){
-        printf("ERROR: Negative coordinate\n");
+        ERROR("Negative coordinate\n")
         return false;
     }
     
@@ -114,12 +111,12 @@ bool readAccessPoint(terra_t* env){
     env->accessCol = cols;
     
     if(!pointInMap(env->accessRow, env->accessCol, &env->map)){
-        printf("ERROR: Access point out of bounds\n");
+        ERROR("Access point out of bounds\n")
         return false;
     }
     
     if(!pointOnBorder(env->accessRow, env->accessCol, &env->map)){
-        printf("ERROR: Access point not on border\n");
+        ERROR("Access point not on border\n")
         return false;
     }
     
@@ -127,7 +124,7 @@ bool readAccessPoint(terra_t* env){
     mapSet(&env->map, env->accessRow, env->accessCol, FIELD_ACCESS);
     
     emptyStdIn();
-    printf("\n");
+    DIALOG("\n")
     
     return true;
 }
@@ -135,16 +132,16 @@ bool readAccessPoint(terra_t* env){
 bool readNumbRobs(terra_t* env){
     int numb;
     
-    printf("ENTER NUMBER OF ROBOTS\n");
-    printPrompt();
+    DIALOG("ENTER NUMBER OF ROBOTS\n")
+    PROMPT()
     
     if(scanf("%d", &numb) < 1){
-        printf("ERROR: Invalid input\n");
+        ERROR("Invalid input\n")
         return false;
     }
     
     if(numb < 1){
-        printf("ERROR: Invalid number of robots\n");
+        ERROR("Invalid number of robots\n")
         return false;
     }
     
@@ -154,7 +151,7 @@ bool readNumbRobs(terra_t* env){
     // robsInit(robSet)
     
     emptyStdIn();
-    printf("\n");
+    DIALOG("\n")
     
     return true;
 }
@@ -162,23 +159,23 @@ bool readNumbRobs(terra_t* env){
 bool readNumbObsts(terra_t* env){
     int numb;
     
-    printf("ENTER NUMBER OF OBSTACLES\n");
-    printPrompt();
+    DIALOG("ENTER NUMBER OF OBSTACLES\n")
+    PROMPT()
     
     if(scanf("%d", &numb) < 1){
-        printf("ERROR: Invalid input\n");
+        ERROR("Invalid input\n")
         return false;
     }
     
     if(numb < 0){
-        printf("ERROR: Invalid number of obstacles\n");
+        ERROR("Invalid number of obstacles\n")
         return false;
     }
     
     env->numbObsts = numb;
     
     emptyStdIn();
-    printf("\n");
+    DIALOG("\n")
     
     return true;
 }
@@ -191,7 +188,7 @@ bool readObsts(terra_t* env){
         return true;
     }
     
-    printf("ENTER POSITIONS OF OBSTACLES\n");
+    DIALOG("ENTER POSITIONS OF OBSTACLES\n")
     for(o = 0; o < env->numbObsts; o++){
         if(!readCoord(&obst.top)){
             return false;
@@ -202,24 +199,24 @@ bool readObsts(terra_t* env){
         }
         
         if(!obstInMap(&obst, &env->map)){
-            printf("ERROR: Obstacle not in map\n");
+            ERROR("Obstacle not in map\n")
             return false;
         }
         
         if(obstOnBorder(&obst, &env->map)){
-            printf("ERROR: Obstacle on border\n");
+            ERROR("Obstacle on border\n")
             return false;
         }
         
         if(obstCollides(&obst, &env->map)){
-            printf("ERROR: Obstacles too close\n");
+            ERROR("Obstacles too close\n")
             return false;
         }
         
         mapAddObstacle(&env->map, &obst);
     }
     
-    printf("\n");
+    DIALOG("\n")
     
     return true;
 }
@@ -229,14 +226,14 @@ bool readCoord(unsigned int* coord){
     int end;
     
     if(scanf("%d", &start) < 1){
-        printf("ERROR: Invalid input\n");
+        ERROR("Invalid input\n")
         return false;
     }
     
     if(getchar() == '-'){
         // range notation
         if(scanf("%d", &end) < 1){
-            printf("ERROR: Invalid input\n");
+            ERROR("Invalid input\n")
             return false;
         }
     }else{
@@ -245,7 +242,7 @@ bool readCoord(unsigned int* coord){
     }
     
     if(start < 0 || end < 0){
-        printf("ERROR: Negative coordinate\n");
+        ERROR("Negative coordinate\n")
     }
     
     coord[0] = start;
@@ -275,7 +272,7 @@ void init(terra_t* env){
     mapPrint(&env->map);
 }
 
-void loop(){
+void loop(void){
     // TODO
 }
 
@@ -283,7 +280,7 @@ void clean(terra_t* env){
     mapFree(&env->map);
 }
 
-int main(){
+int main(void){
     terra_t env;
     
     init(&env);
