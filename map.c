@@ -38,25 +38,15 @@ void mapSet(map_t* map, unsigned int row, unsigned int col, char set){
     }
 }
 
-void mapAddObstacles(map_t* map, obstSet_t* obstSet){
-    unsigned int i;
+void mapAddObstacle(map_t* map, obst_t* obst){
     unsigned int r;
     unsigned int c;
-    obst_t* obst;
     
-    for(i = 0; i < obstSet->numbObsts; i++){
-        obst = &obstSet->set[i];
-        
-        for(r = obst->topLeft.row; r <= obst->bottomRight.row; r++){
-            for(c = obst->topLeft.col; c <= obst->bottomRight.col; c++){
-                mapSet(map, r, c, FIELD_OBSTACLE);
-            }
+    for(r = obst->top; r <= obst->bottom; r++){
+        for(c = obst->left; c <= obst->right; c++){
+            mapSet(map, r, c, FIELD_OBSTACLE);
         }
     }
-}
-
-void mapSetAccessPoint(map_t* map, point_t* point){
-    mapSet(map, point->row, point->col, FIELD_ACCESS);
 }
 
 void mapPrint(map_t* map){
