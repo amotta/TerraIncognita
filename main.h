@@ -1,9 +1,6 @@
 #ifndef TerraIncognita_main_h
 #define TerraIncognita_main_h
 
-#define MODE_CONSOLE 0
-#define MODE_REDIRECT 1
-
 #include <stdbool.h>
 
 void emptyStdIn();

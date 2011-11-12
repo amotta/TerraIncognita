@@ -2,7 +2,6 @@
 #include <stdio.h>
 
 #include "map.h"
-#include "point.h"
 
 void mapInit(map_t* map, char fill){
     map->length = map->rows * map->cols;

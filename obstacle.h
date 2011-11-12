@@ -3,14 +3,7 @@
 
 #include <stdbool.h>
 
-#include "map.h"
-
-typedef struct {
-    unsigned int top;
-    unsigned int bottom;
-    unsigned int left;
-    unsigned int right;
-} obst_t;
+#include "types.h"
 
 void obstPrint(obst_t*);
 bool obstInMap(obst_t*, map_t*);

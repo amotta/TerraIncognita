@@ -5,8 +5,9 @@
 
 #include "main.h"
 #include "map.h"
-#include "point.h"
 #include "obstacle.h"
+#include "point.h"
+#include "types.h"
 
 static char dialogMode;
 static char displayMode;

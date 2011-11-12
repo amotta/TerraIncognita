@@ -2,7 +2,8 @@
 #define TerraIncognita_point_h
 
 #include <stdbool.h>
-#include "map.h"
+
+#include "types.h"
 
 bool pointInMap(unsigned int, unsigned int, map_t*);
 bool pointOnBorder(unsigned int, unsigned int, map_t*);
