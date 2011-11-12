@@ -6,15 +6,6 @@
 #include "map.h"
 #include "obstacle.h"
 
-/*
-void obstAssign(obst_t* dest, obst_t* source){
-    dest->top = source->top;
-    dest->bottom = source->bottom;
-    dest->left = source->left;
-    dest->right = source->right;
-}
-*/
-
 void obstPrint(obst_t* obst){
     printf("%u-%u ", obst->top, obst->bottom);
     printf("%u-%u\n", obst->left, obst->right);

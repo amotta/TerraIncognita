@@ -12,7 +12,6 @@ typedef struct {
     unsigned int right;
 } obst_t;
 
-// void obstAssign(obst_t*, obst_t*);
 void obstPrint(obst_t*);
 bool obstInMap(obst_t*, map_t*);
 bool obstOnBorder(obst_t*, map_t*);
