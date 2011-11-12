@@ -8,7 +8,7 @@
 #define MODE_CONSOLE 0
 #define MODE_REDIRECT 1
 
-typedef struct map {
+typedef struct {
     unsigned int rows;
     unsigned int cols;
     unsigned int length;
@@ -21,5 +21,18 @@ typedef struct {
     unsigned int left;
     unsigned int right;
 } obst_t;
+
+typedef struct {
+    char dialogMode;
+    char displayMode;
+    map_t map;
+    unsigned int numbObsts;
+    unsigned int accessRow;
+    unsigned int accessCol;
+    
+    // TODO
+    // create robSet_t
+    unsigned int numbRobs;
+} terra_t;
 
 #endif

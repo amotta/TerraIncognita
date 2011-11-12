@@ -3,20 +3,22 @@
 
 #include <stdbool.h>
 
+#include "types.h"
+
 void emptyStdIn();
 void printPrompt();
-bool readDialogMode();
-bool readDisplayMode();
-bool readMapSize();
-bool readAccessPoint();
-bool readNumbRobs();
-bool readNumbObsts();
-bool readObsts();
+bool readDialogMode(terra_t*);
+bool readDisplayMode(terra_t*);
+bool readMapSize(terra_t*);
+bool readAccessPoint(terra_t*);
+bool readNumbRobs(terra_t*);
+bool readNumbObsts(terra_t*);
+bool readObsts(terra_t*);
 bool readCoord(unsigned int*);
-bool readData();
-void init();
+bool readData(terra_t*);
+void init(terra_t*);
 void loop();
-void clean();
+void clean(terra_t*);
 int main();
 
 #endif

@@ -7,18 +7,6 @@
 #include "map.h"
 #include "obstacle.h"
 #include "point.h"
-#include "types.h"
-
-static char dialogMode;
-static char displayMode;
-static map_t map;
-static unsigned int numbObsts;
-static unsigned int accessRow;
-static unsigned int accessCol;
-
-// TODO
-// Create rob set structure
-static unsigned int numbRobs;
 
 void emptyStdIn(){
     while(getchar() != '\n');
@@ -30,7 +18,7 @@ void printPrompt(){
     fflush(stdout);
 }
 
-bool readDialogMode(){
+bool readDialogMode(terra_t* env){
     printf("SELECT DIALOG MODE\n");
     printf("0\tDialog\n");
     printf("1\tRedirection\n");
@@ -43,9 +31,9 @@ bool readDialogMode(){
     }
     
     if(in){
-        dialogMode = MODE_REDIRECT;
+        env->dialogMode = MODE_REDIRECT;
     }else{
-        dialogMode = MODE_CONSOLE;
+        env->dialogMode = MODE_CONSOLE;
     }
     
     emptyStdIn();
@@ -54,7 +42,7 @@ bool readDialogMode(){
     return true;
 }
 
-bool readDisplayMode(){
+bool readDisplayMode(terra_t* env){
     printf("SELECT DISPLAY MODE\n");
     printf("0\tComplete\n");
     printf("1\tRedirection\n");
@@ -67,9 +55,9 @@ bool readDisplayMode(){
     }
     
     if(in){
-        displayMode = MODE_REDIRECT;
+        env->displayMode = MODE_REDIRECT;
     }else{
-        displayMode = MODE_CONSOLE;
+        env->displayMode = MODE_CONSOLE;
     }
     
     emptyStdIn();
@@ -78,7 +66,7 @@ bool readDisplayMode(){
     return true;
 }
 
-bool readMapSize(){
+bool readMapSize(terra_t* env){
     int rows = 0;
     int cols = 0; 
     
@@ -95,9 +83,9 @@ bool readMapSize(){
         return false;
     }
     
-    map.rows = rows;
-    map.cols = cols;
-    mapInit(&map, FIELD_EMPTY);
+    env->map.rows = rows;
+    env->map.cols = cols;
+    mapInit(&env->map, FIELD_EMPTY);
     
     emptyStdIn();
     printf("\n");
@@ -105,7 +93,7 @@ bool readMapSize(){
     return true;
 }
 
-bool readAccessPoint(){
+bool readAccessPoint(terra_t* env){
     int rows = 0;
     int cols = 0;
     
@@ -122,21 +110,21 @@ bool readAccessPoint(){
         return false;
     }
     
-    accessRow = rows;
-    accessCol = cols;
+    env->accessRow = rows;
+    env->accessCol = cols;
     
-    if(!pointInMap(accessRow, accessCol, &map)){
+    if(!pointInMap(env->accessRow, env->accessCol, &env->map)){
         printf("ERROR: Access point out of bounds\n");
         return false;
     }
     
-    if(!pointOnBorder(accessRow, accessCol, &map)){
+    if(!pointOnBorder(env->accessRow, env->accessCol, &env->map)){
         printf("ERROR: Access point not on border\n");
         return false;
     }
     
     // add access point to map
-    mapSet(&map, accessRow, accessCol, FIELD_ACCESS);
+    mapSet(&env->map, env->accessRow, env->accessCol, FIELD_ACCESS);
     
     emptyStdIn();
     printf("\n");
@@ -144,7 +132,7 @@ bool readAccessPoint(){
     return true;
 }
 
-bool readNumbRobs(){
+bool readNumbRobs(terra_t* env){
     int numb;
     
     printf("ENTER NUMBER OF ROBOTS\n");
@@ -156,11 +144,11 @@ bool readNumbRobs(){
     }
     
     if(numb < 1){
-        printf("ERROR: Number of robots is invalid\n");
+        printf("ERROR: Invalid number of robots\n");
         return false;
     }
     
-    numbRobs = numb;
+    env->numbRobs = numb;
     
     // TODO
     // robsInit(robSet)
@@ -171,7 +159,7 @@ bool readNumbRobs(){
     return true;
 }
 
-bool readNumbObsts(){
+bool readNumbObsts(terra_t* env){
     int numb;
     
     printf("ENTER NUMBER OF OBSTACLES\n");
@@ -187,7 +175,7 @@ bool readNumbObsts(){
         return false;
     }
     
-    numbObsts = numb;
+    env->numbObsts = numb;
     
     emptyStdIn();
     printf("\n");
@@ -195,40 +183,40 @@ bool readNumbObsts(){
     return true;
 }
 
-bool readObsts(){
+bool readObsts(terra_t* env){
     obst_t obst;
     unsigned int o;
     
-    if(!numbObsts){
+    if(!env->numbObsts){
         return true;
     }
     
     printf("ENTER POSITIONS OF OBSTACLES\n");
-    for(o = 0; o < numbObsts; o++){
-        if(!readCoord(&(obst.top))){
+    for(o = 0; o < env->numbObsts; o++){
+        if(!readCoord(&obst.top)){
             return false;
         }
            
-        if(!readCoord(&(obst.left))){
+        if(!readCoord(&obst.left)){
             return false;
         }
         
-        if(!obstInMap(&obst, &map)){
+        if(!obstInMap(&obst, &env->map)){
             printf("ERROR: Obstacle not in map\n");
             return false;
         }
         
-        if(obstOnBorder(&obst, &map)){
+        if(obstOnBorder(&obst, &env->map)){
             printf("ERROR: Obstacle on border\n");
             return false;
         }
         
-        if(obstCollides(&obst, &map)){
+        if(obstCollides(&obst, &env->map)){
             printf("ERROR: Obstacles too close\n");
             return false;
         }
         
-        mapAddObstacle(&map, &obst);
+        mapAddObstacle(&env->map, &obst);
     }
     
     printf("\n");
@@ -266,44 +254,41 @@ bool readCoord(unsigned int* coord){
     return true;
 }
 
-bool readData(){
+bool readData(terra_t* env){
     bool ok = true;
-    ok = ok && readDialogMode();
-    ok = ok && readDisplayMode();
-    ok = ok && readMapSize();
-    ok = ok && readAccessPoint();
-    ok = ok && readNumbRobs();
-    ok = ok && readNumbObsts();
-    ok = ok && readObsts();
+    ok = ok && readDialogMode(env);
+    ok = ok && readDisplayMode(env);
+    ok = ok && readMapSize(env);
+    ok = ok && readAccessPoint(env);
+    ok = ok && readNumbRobs(env);
+    ok = ok && readNumbObsts(env);
+    ok = ok && readObsts(env);
     
     return ok;
 }
 
-void init(){
-    bool ok = true;
-    
-    // make sure mapFree always works
-    map.map = NULL;
-    
-    ok = ok && readData();
-    
-    if(ok){
-        mapPrint(&map);
+void init(terra_t* env){
+    if(!readData(env)){
+        return;
     }
+    
+    mapPrint(&env->map);
 }
 
 void loop(){
     // TODO
 }
 
-void clean(){
-    mapFree(&map);
+void clean(terra_t* env){
+    mapFree(&env->map);
 }
 
 int main(){
-    init();
+    terra_t env;
+    
+    init(&env);
     loop();
-    clean();
+    clean(&env);
     
     return EXIT_SUCCESS;
 }
