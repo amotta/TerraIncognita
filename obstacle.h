@@ -15,5 +15,6 @@ typedef struct {
 void obstPrint(obst_t*);
 bool obstInMap(obst_t*, map_t*);
 bool obstOnBorder(obst_t*, map_t*);
+bool obstCollides(obst_t*, map_t*);
 
 #endif

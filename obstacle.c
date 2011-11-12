@@ -32,3 +32,18 @@ bool obstOnBorder(obst_t* obst, map_t* map){
         return false;
     }
 }
+
+bool obstCollides(obst_t* obst, map_t* map){
+    unsigned int r;
+    unsigned int c;
+    
+    for(r = obst->top - 1; r <= obst->bottom + 1; r++){
+        for(c = obst->left - 1; c <= obst->right + 1; c++){
+            if(mapGet(map, r, c) == FIELD_OBSTACLE){
+                return true;
+            }
+        }
+    }
+    
+    return false;
+}

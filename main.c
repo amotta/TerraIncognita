@@ -208,25 +208,23 @@ bool readObsts(){
         }
         
         if(!obstInMap(&obst, &map)){
-            printf("ERROR: Obstacles not in map\n");
+            printf("ERROR: Obstacle not in map\n");
             return false;
         }
         
         if(obstOnBorder(&obst, &map)){
-            printf("ERROR: Obstacles on border\n");
+            printf("ERROR: Obstacle on border\n");
             return false;
         }
         
-        // TODO
-        // if(!obstIsSeparate(&obst, &obstSet)){
-        //    printf("ERROR: Not enough space between obstacles\n");
-        //    return false;
-        // }
+        if(obstCollides(&obst, &map)){
+            printf("ERROR: Obstacles too close\n");
+            return false;
+        }
         
         mapAddObstacle(&map, &obst);
     }
     
-    emptyStdIn();
     printf("\n");
     
     return true;
