@@ -129,6 +129,11 @@ bool readAccessPoint(){
         return false;
     }
     
+    if(!pointOnBorder(accessRow, accessCol, &map)){
+        printf("ERROR: Access point not on border\n");
+        return false;
+    }
+    
     // add access point to map
     mapSet(&map, accessRow, accessCol, FIELD_ACCESS);
     
