@@ -8,17 +8,16 @@
 #include "point.h"
 #include "obstacle.h"
 
-static int dialogMode;
-static int displayMode;
-
+static char dialogMode;
+static char displayMode;
 static map_t map;
-static point_t accessPoint;
+static unsigned int numbObsts;
+static unsigned int accessRow;
+static unsigned int accessCol;
 
 // TODO
 // Create rob set structure
 static unsigned int numbRobs;
-
-static obstSet_t obstSet;
 
 void emptyStdIn(){
     while(getchar() != '\n');
@@ -36,7 +35,7 @@ bool readDialogMode(){
     printf("1\tRedirection\n");
     printPrompt();
     
-    int in = 0;
+    int in;
     if(scanf("%d", &in) < 1){
         printf("ERROR: Invalid input\n");
         return false;
@@ -122,15 +121,16 @@ bool readAccessPoint(){
         return false;
     }
     
-    accessPoint.row = rows;
-    accessPoint.col = cols;
+    accessRow = rows;
+    accessCol = cols;
     
-    if(!pointInMap(&accessPoint, &map)){
+    if(!pointInMap(accessRow, accessCol, &map)){
         printf("ERROR: Access point out of bounds\n");
         return false;
     }
     
-    mapSetAccessPoint(&map, &accessPoint);
+    // add access point to map
+    mapSet(&map, accessRow, accessCol, FIELD_ACCESS);
     
     emptyStdIn();
     printf("\n");
@@ -181,8 +181,7 @@ bool readNumbObsts(){
         return false;
     }
     
-    obstSet.length = numb;
-    obstSetInit(&obstSet);
+    numbObsts = numb;
     
     emptyStdIn();
     printf("\n");
@@ -193,11 +192,13 @@ bool readNumbObsts(){
 bool readObsts(){
     obst_t obst;
     unsigned int o;
-    unsigned int i;
+    
+    if(!numbObsts){
+        return true;
+    }
     
     printf("ENTER POSITIONS OF OBSTACLES\n");
-    
-    for(o = 0; o < obstSet.length; o++){
+    for(o = 0; o < numbObsts; o++){
         if(!readCoord(&(obst.top))){
             return false;
         }
@@ -216,15 +217,14 @@ bool readObsts(){
             return false;
         }
         
-        if(!obstIsSeparate(&obst, &obstSet)){
-            printf("ERROR: Not enough space between obstacles\n");
-            return false;
-        }
+        // TODO
+        // if(!obstIsSeparate(&obst, &obstSet)){
+        //    printf("ERROR: Not enough space between obstacles\n");
+        //    return false;
+        // }
         
-        obstSetAdd(&obstSet, &obst);
+        mapAddObstacle(&map, &obst);
     }
-    
-    mapAddObstacles(&map, &obstSet);
     
     emptyStdIn();
     printf("\n");
@@ -278,9 +278,9 @@ bool readData(){
 void init(){
     bool ok = true;
     
+    // make sure mapFree always works
     map.map = NULL;
-    obstSet.set = NULL;
-
+    
     ok = ok && readData();
     
     if(ok){
@@ -294,7 +294,6 @@ void loop(){
 
 void clean(){
     mapFree(&map);
-    obstSetFree(&obstSet);
 }
 
 int main(){

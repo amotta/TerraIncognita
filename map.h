@@ -19,8 +19,7 @@ void mapInit(map_t*, char);
 void mapFree(map_t*);
 char mapGet(map_t*, unsigned int, unsigned int);
 void mapSet(map_t*, unsigned int, unsigned int, char);
-void mapAddObstacles(map_t*, obstSet_t*);
-void mapSetAccessPoint(map_t*, point_t*);
+void mapAddObstacle(map_t*, obst_t*);
 void mapPrint(map_t*);
 
 #endif
