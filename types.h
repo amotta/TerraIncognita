@@ -23,7 +23,7 @@ typedef struct {
 
 typedef struct {
     bool dialogMode;
-    bool displayMode;
+    bool resultMode;
     map_t map;
     unsigned int numbObsts;
     unsigned int accessRow;

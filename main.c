@@ -43,7 +43,7 @@ bool readDialogMode(terra_t* env){
 bool readDisplayMode(terra_t* env){
     if(env->dialogMode){
         printf(
-            "SELECT DISPLAY MODE\n"
+            "SELECT RESULT MODE\n"
             "0\tComplete\n"
             "1\tRedirection\n"
         );
@@ -57,16 +57,23 @@ bool readDisplayMode(terra_t* env){
     }
     
     if(in){
-        env->displayMode = false;
+        env->resultMode = false;
+        
+        if(env->dialogMode){
+            printf(
+                "< Redirection mode selected"
+                "\n"
+            );
+        }
     }else{
-        env->displayMode = true;
-    }
-    
-    if(env->dialogMode){
-        printf(
-            "< Console mode selected\n"
-            "\n"
-        );
+        env->resultMode = true;
+        
+        if(env->dialogMode){
+            printf(
+                "< Complete mode selected\n"
+                "\n"
+            );
+        }
     }
     
     emptyStdIn();
@@ -163,7 +170,7 @@ bool readAccessPoint(terra_t* env){
 bool readNumbRobs(terra_t* env){
     int numb;
     
-    if(env->displayMode){
+    if(env->dialogMode){
         printf("ENTER NUMBER OF ROBOTS\n");
         printPrompt();
     }
