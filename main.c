@@ -250,11 +250,7 @@ bool readObsts(terra_t* env){
     }
     
     for(o = 0; o < env->numbObsts; o++){
-        if(!readCoord(&obst.top)){
-            return false;
-        }
-           
-        if(!readCoord(&obst.left)){
+        if(!readCoord(&obst.top) || !readCoord(&obst.left)){
             return false;
         }
         
