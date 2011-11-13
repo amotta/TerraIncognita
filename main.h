@@ -5,14 +5,6 @@
 
 #include "types.h"
 
-#define ERROR(...) \
-    printf("ERROR: " __VA_ARGS__);
-
-#define PROMPT() \
-    if(env->dialogMode == MODE_CONSOLE){ \
-        printPrompt(); \
-    }
-
 void emptyStdIn(void);
 void printPrompt(void);
 bool readDialogMode(terra_t*);
