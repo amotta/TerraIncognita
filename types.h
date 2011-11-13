@@ -22,10 +22,16 @@ typedef struct {
 } obst_t;
 
 typedef struct {
+    unsigned int used;
+    unsigned int length;
+    obst_t* set;
+} obstSet_t;
+
+typedef struct {
     bool dialogMode;
     bool resultMode;
     map_t map;
-    unsigned int numbObsts;
+    obstSet_t obsts;
     unsigned int accessRow;
     unsigned int accessCol;
     

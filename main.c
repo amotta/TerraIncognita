@@ -221,13 +221,14 @@ bool readNumbObsts(terra_t* env){
         return false;
     }
     
-    env->numbObsts = numb;
+    env->obsts.length = numb;
+    obstSetInit(&env->obsts);
     
     if(env->dialogMode){
         printf(
             "< Number of obstacles: %u\n"
             "\n",
-            env->numbObsts
+            env->obsts.length
         );
     }
     
@@ -238,9 +239,10 @@ bool readNumbObsts(terra_t* env){
 
 bool readObsts(terra_t* env){
     obst_t obst;
+    int coll;
     unsigned int o;
     
-    if(!env->numbObsts){
+    if(!env->obsts.length){
         return true;
     }
     
@@ -249,7 +251,7 @@ bool readObsts(terra_t* env){
         printPrompt();
     }
     
-    for(o = 0; o < env->numbObsts; o++){
+    for(o = 0; o < env->obsts.length; o++){
         if(!readCoord(&obst.top) || !readCoord(&obst.left)){
             return false;
         }
@@ -264,11 +266,14 @@ bool readObsts(terra_t* env){
             return false;
         }
         
-        if(obstCollides(&obst, &env->map)){
-            printf("ERROR: Obstacles too close\n");
+        if((coll = obstSetCheck(&env->obsts, &obst)) >= 0){
+            printf("ERROR: The following obstacles are too close\n");
+            obstPrint(&env->obsts.set[coll]);
+            obstPrint(&obst);
             return false;
         }
         
+        obstSetAdd(&env->obsts, &obst);
         mapAddObstacle(&env->map, &obst);
         
         if(env->dialogMode){
@@ -344,6 +349,7 @@ void loop(void){
 
 void clean(terra_t* env){
     mapFree(&env->map);
+    obstSetFree(&env->obsts);
 }
 
 int main(void){

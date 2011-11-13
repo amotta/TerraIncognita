@@ -47,3 +47,38 @@ bool obstCollides(obst_t* obst, map_t* map){
     
     return false;
 }
+
+void obstSetInit(obstSet_t* set){
+    set->set = (obst_t*) malloc(set->length * sizeof(obst_t));
+}
+
+int obstSetCheck(obstSet_t* set, obst_t* obst){
+    unsigned int o;
+    
+    for(o = 0; o < set->used; o++){
+        if(
+           obst->top - 1 <= set->set[o].top
+           && obst->bottom + 1 >= set->set[o].bottom
+           && obst->left - 1 <= set->set[o].left
+           && obst->right + 1 >= set->set[0].right
+        ){
+            return o;
+        }
+    }
+    
+    return -1;
+}
+
+void obstSetAdd(obstSet_t* set, obst_t* obst){
+    if(set->used < set->length){
+        set->set[set->used].top = obst->top;
+        set->set[set->used].bottom = obst->bottom;
+        set->set[set->used].left = obst->left;
+        set->set[set->used].right = obst->right;
+        set->used++;
+    }
+}
+
+void obstSetFree(obstSet_t* set){
+    free(set->set);
+}
