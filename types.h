@@ -1,12 +1,11 @@
 #ifndef TerraIncognita_types_h
 #define TerraIncognita_types_h
 
+#include <stdbool.h>
+
 #define FIELD_EMPTY ' '
 #define FIELD_ACCESS 'A'
 #define FIELD_OBSTACLE 'O'
-
-#define MODE_CONSOLE 0
-#define MODE_REDIRECT 1
 
 typedef struct {
     unsigned int rows;
@@ -23,8 +22,8 @@ typedef struct {
 } obst_t;
 
 typedef struct {
-    char dialogMode;
-    char displayMode;
+    bool dialogMode;
+    bool displayMode;
     map_t map;
     unsigned int numbObsts;
     unsigned int accessRow;

@@ -5,11 +5,6 @@
 
 #include "types.h"
 
-#define DIALOG(...) \
-    if(env->dialogMode == MODE_CONSOLE){ \
-        printf(__VA_ARGS__); \
-    }
-
 #define ERROR(...) \
     printf("ERROR: " __VA_ARGS__);
 
