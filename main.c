@@ -65,7 +65,7 @@ bool readDisplayMode(terra_t* env){
         
         if(env->dialogMode){
             printf(
-                "< Redirection mode selected"
+                "< Redirection mode selected\n"
                 "\n"
             );
         }
