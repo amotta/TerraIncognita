@@ -19,6 +19,7 @@ void printPrompt(void){
 
 bool readDialogMode(terra_t* env){
     int in;
+    
     if(scanf("%d", &in) < 1){
         printf("ERROR: Invalid input\n");
         return false;
@@ -31,7 +32,10 @@ bool readDialogMode(terra_t* env){
     }
     
     if(env->dialogMode){
-        printf("\n");
+        printf(
+            "< Dialog mode selected\n"
+            "\n"
+        );
     }
     
     emptyStdIn();
@@ -40,6 +44,8 @@ bool readDialogMode(terra_t* env){
 }
 
 bool readDisplayMode(terra_t* env){
+    int in;
+    
     if(env->dialogMode){
         printf(
             "SELECT RESULT MODE\n"
@@ -49,7 +55,6 @@ bool readDisplayMode(terra_t* env){
         printPrompt();
     }
     
-    int in = 0;
     if(scanf("%d", &in) < 1){
         printf("ERROR: Invalid input\n");
         return false;
@@ -81,8 +86,8 @@ bool readDisplayMode(terra_t* env){
 }
 
 bool readMapSize(terra_t* env){
-    int rows = 0;
-    int cols = 0; 
+    int rows;
+    int cols; 
     
     if(env->dialogMode){
         printf("ENTER MAP SIZE\n");
@@ -118,8 +123,8 @@ bool readMapSize(terra_t* env){
 }
 
 bool readAccessPoint(terra_t* env){
-    int rows = 0;
-    int cols = 0;
+    int rows;
+    int cols;
     
     if(env->dialogMode){
         printf("ENTER POSITION OF ACCESS POINT\n");
@@ -136,18 +141,18 @@ bool readAccessPoint(terra_t* env){
         return false;
     }
     
-    env->accessRow = rows;
-    env->accessCol = cols;
-    
-    if(!pointInMap(env->accessRow, env->accessCol, &env->map)){
+    if(!pointInMap(rows, cols, &env->map)){
         printf("ERROR: Access point out of bounds\n");
         return false;
     }
     
-    if(!pointOnBorder(env->accessRow, env->accessCol, &env->map)){
+    if(!pointOnBorder(rows, cols, &env->map)){
         printf("ERROR: Access point not on border\n");
         return false;
     }
+    
+    env->accessRow = rows;
+    env->accessCol = cols;
     
     // add access point to map
     mapSet(&env->map, env->accessRow, env->accessCol, FIELD_ACCESS);
@@ -266,7 +271,7 @@ bool readObsts(terra_t* env){
         }
         
         if((coll = obstSetCheck(&env->obsts, &obst)) >= 0){
-            printf("ERROR: The following obstacles are too close\n");
+            printf("ERROR: Obstacles %u and %u are too close\n", coll, o);
             obstPrint(&env->obsts.set[coll]);
             obstPrint(&obst);
             return false;
