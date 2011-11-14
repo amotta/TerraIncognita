@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include <string.h>
 
 #include "main.h"
 #include "map.h"
@@ -316,8 +315,14 @@ bool readCoord(unsigned int* coord){
         printf("ERROR: Negative coordinate\n");
     }
     
-    coord[0] = start;
-    coord[1] = end;
+    if(end < start){
+        coord[0] = end;
+        coord[1] = start;
+        printf("NOTICE: Automatically corrected coordinate order\n");
+    }else{
+        coord[0] = start;
+        coord[1] = end;
+    }
     
     return true;
 }
