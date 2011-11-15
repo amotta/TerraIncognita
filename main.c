@@ -261,18 +261,22 @@ bool readObsts(terra_t* env){
         }
         
         if(!obstInMap(&obst, &env->map)){
-            printf("ERROR: Obstacle not in map\n");
+            printf("ERROR: Obstacle %u not in map\n", o);
             return false;
         }
         
         if(obstOnBorder(&obst, &env->map)){
-            printf("ERROR: Obstacle on border\n");
+            printf("ERROR: Obstacle %u on border\n", o);
             return false;
         }
         
         if((coll = obstSetCheck(&env->obsts, &obst)) >= 0){
             printf("ERROR: Obstacles %u and %u are too close\n", coll, o);
+            
+            printf("Obst %u: ", coll);
             obstPrint(&env->obsts.set[coll]);
+            
+            printf("Obst %u: ", o);
             obstPrint(&obst);
             return false;
         }
