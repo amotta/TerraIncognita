@@ -45,7 +45,7 @@ int obstSetCheck(obstSet_t* set, obst_t* obst){
            obst->top - 1 <= set->set[o].top
            && obst->bottom + 1 >= set->set[o].bottom
            && obst->left - 1 <= set->set[o].left
-           && obst->right + 1 >= set->set[0].right
+           && obst->right + 1 >= set->set[o].right
         ){
             return o;
         }
