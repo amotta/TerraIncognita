@@ -350,6 +350,9 @@ bool readData(terra_t* env){
 }
 
 void init(terra_t* env){
+    env->map.map = NULL;
+    env->obsts.set = NULL;
+    
     if(!readData(env)){
         return;
     }
