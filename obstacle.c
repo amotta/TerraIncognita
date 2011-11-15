@@ -34,6 +34,7 @@ bool obstOnBorder(obst_t* obst, map_t* map){
 }
 
 void obstSetInit(obstSet_t* set){
+    set->used = 0;
     set->set = (obst_t*) malloc(set->length * sizeof(obst_t));
 }
 
