@@ -8,7 +8,7 @@
 void emptyStdIn(void);
 void printPrompt(void);
 bool readDialogMode(terra_t*);
-bool readDisplayMode(terra_t*);
+bool readResultMode(terra_t*);
 bool readMapSize(terra_t*);
 bool readAccessPoint(terra_t*);
 bool readNumbRobs(terra_t*);
