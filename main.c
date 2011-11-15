@@ -286,8 +286,7 @@ bool readObsts(terra_t* env){
         
         if(env->dialogMode){
             printf(
-                "< Position of obstacle %u: %u-%u %u-%u\n"
-                "\n",
+                "< Position of obstacle %u: %u-%u %u-%u\n",
                 o,
                 obst.top,
                 obst.bottom,
@@ -295,6 +294,10 @@ bool readObsts(terra_t* env){
                 obst.right
             );
         }
+    }
+    
+    if(env->dialogMode){
+        printf("\n");
     }
     
     return true;
