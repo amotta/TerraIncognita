@@ -1,3 +1,12 @@
+// TERRA INCOGNITA
+// Rendu intermédiaire
+// 17. 11. 2011
+// 
+// Alessandro Motta
+// 2011-MT1
+//
+// main.c
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
