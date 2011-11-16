@@ -11,11 +11,245 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include "main.h"
-#include "map.h"
-#include "obstacle.h"
-#include "point.h"
 
+// contents of types.h
+#define FIELD_EMPTY ' '
+#define FIELD_ACCESS 'A'
+#define FIELD_OBSTACLE 'O'
+
+
+typedef struct {
+    unsigned int rows;
+    unsigned int cols;
+    unsigned int length;
+    char* map;
+} map_t;
+
+typedef struct {
+    unsigned int top;
+    unsigned int bottom;
+    unsigned int left;
+    unsigned int right;
+} obst_t;
+
+typedef struct {
+    unsigned int used;
+    unsigned int length;
+    obst_t* set;
+} obstSet_t;
+
+typedef struct {
+    bool dialogMode;
+    bool resultMode;
+    map_t map;
+    obstSet_t obsts;
+    unsigned int accessRow;
+    unsigned int accessCol;
+    
+    // TODO
+    // create robSet_t
+    unsigned int numbRobs;
+} terra_t;
+
+
+// contents of map.h
+void mapInit(map_t* map, char fill);
+void mapFree(map_t* map);
+char mapGet(map_t* map, unsigned int row, unsigned int col);
+void mapSet(map_t* map, unsigned int row, unsigned int col, char fill);
+void mapAddObstacle(map_t* mall, obst_t* obst);
+void mapPrint(map_t* map);
+
+
+// contents of obstacle.h
+void obstPrint(obst_t* obst);
+bool obstInMap(obst_t* obst, map_t* map);
+bool obstOnBorder(obst_t* obst, map_t* map);
+void obstSetInit(obstSet_t* set);
+int obstSetCheck(obstSet_t* set, obst_t* obst);
+void obstSetAdd(obstSet_t* set, obst_t* obst);
+void obstSetFree(obstSet_t* set);
+
+
+// contents of point.h
+bool pointInMap(unsigned int row, unsigned int col, map_t* map);
+bool pointOnBorder(unsigned int row, unsigned int col, map_t* map);
+
+
+// contents of main.h
+void emptyStdIn(void);
+void printPrompt(void);
+bool readDialogMode(terra_t* env);
+bool readResultMode(terra_t* env);
+bool readMapSize(terra_t* env);
+bool readAccessPoint(terra_t* env);
+bool readNumbRobs(terra_t* env);
+bool readNumbObsts(terra_t* env);
+bool readObsts(terra_t* env);
+bool readCoord(unsigned int* dim);
+bool readData(terra_t* env);
+void init(terra_t* env);
+void loop(void);
+void clean(terra_t* env);
+int main(void);
+
+
+// contents of map.c
+void mapInit(map_t* map, char fill){
+    map->length = map->rows * map->cols;
+    map->map = (char*) malloc(map->length * sizeof(char));
+    
+    unsigned int col, row;
+    for(row = 0; row < map->rows; row++){
+        for(col = 0; col < map->cols; col++){
+            mapSet(map, row, col, fill);
+        }
+    }
+}
+
+void mapFree(map_t* map){
+    free(map->map);
+}
+
+char mapGet(map_t* map, unsigned int row, unsigned int col){
+    unsigned int i = row * map->cols + col;
+    
+    if(i < map->length){
+        return map->map[i];
+    }else{
+        return 0;
+    }
+}
+
+void mapSet(map_t* map, unsigned int row, unsigned int col, char set){
+    unsigned int i = row * map->cols + col;
+    
+    if(i < map->length){
+        map->map[i] = set;
+    }
+}
+
+void mapAddObstacle(map_t* map, obst_t* obst){
+    unsigned int r;
+    unsigned int c;
+    
+    for(r = obst->top; r <= obst->bottom; r++){
+        for(c = obst->left; c <= obst->right; c++){
+            mapSet(map, r, c, FIELD_OBSTACLE);
+        }
+    }
+}
+
+void mapPrint(map_t* map){
+    unsigned int i, j;
+    for(i = 0; i < map->rows; i++){
+        for(j = 0; j < 2 * map->cols + 1; j++){
+            putchar('-');
+        }
+        
+        putchar('\n');
+        
+        for(j = 0; j < map->cols; j++){
+            putchar('|');
+            putchar(mapGet(map, i, j));
+        }
+        
+        putchar('|');
+        putchar('\n');
+    }
+    
+    for(j = 0; j < 2 * map->cols; j++){
+        putchar('-');
+    }
+    
+    putchar('\n');
+}
+
+
+// contents of obstacle.c
+void obstPrint(obst_t* obst){
+    printf("%u-%u ", obst->top, obst->bottom);
+    printf("%u-%u\n", obst->left, obst->right);
+}
+
+bool obstInMap(obst_t* obst, map_t* map){
+    if(
+       pointInMap(obst->top, obst->left, map)
+       && pointInMap(obst->bottom, obst->right, map)
+       ){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool obstOnBorder(obst_t* obst, map_t* map){
+    if(
+       pointOnBorder(obst->top, obst->left, map)
+       || pointOnBorder(obst->bottom, obst->right, map)
+       ){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+void obstSetInit(obstSet_t* set){
+    set->used = 0;
+    set->set = (obst_t*) malloc(set->length * sizeof(obst_t));
+}
+
+int obstSetCheck(obstSet_t* set, obst_t* obst){
+    unsigned int o;
+    
+    for(o = 0; o < set->used; o++){
+        if(
+           obst->top - 1 <= set->set[o].top
+           && obst->bottom + 1 >= set->set[o].bottom
+           && obst->left - 1 <= set->set[o].left
+           && obst->right + 1 >= set->set[o].right
+           ){
+            return o;
+        }
+    }
+    
+    return -1;
+}
+
+void obstSetAdd(obstSet_t* set, obst_t* obst){
+    if(set->used < set->length){
+        set->set[set->used].top = obst->top;
+        set->set[set->used].bottom = obst->bottom;
+        set->set[set->used].left = obst->left;
+        set->set[set->used].right = obst->right;
+        set->used++;
+    }
+}
+
+void obstSetFree(obstSet_t* set){
+    free(set->set);
+}
+
+
+// contents of point.c
+bool pointInMap(unsigned int row, unsigned int col, map_t* map){
+    if(row < map->rows && col < map->cols){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool pointOnBorder(unsigned int row, unsigned int col, map_t* map){
+    if(row == 0 || col == 0 || row == map->rows - 1 || col == map->cols - 1){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+
+// contents of main.c
 void emptyStdIn(void){
     while(getchar() != '\n');
 }
@@ -287,6 +521,7 @@ bool readObsts(terra_t* env){
             
             printf("Obst %u: ", o);
             obstPrint(&obst);
+            
             return false;
         }
         
@@ -296,11 +531,7 @@ bool readObsts(terra_t* env){
         if(env->dialogMode){
             printf(
                 "< Position of obstacle %u: %u-%u %u-%u\n",
-                o,
-                obst.top,
-                obst.bottom,
-                obst.left,
-                obst.right
+                o, obst.top, obst.bottom, obst.left, obst.right
             );
         }
     }
