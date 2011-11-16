@@ -360,7 +360,9 @@ void init(terra_t* env){
         return;
     }
     
-    mapPrint(&env->map);
+    if(env->resultMode){
+        mapPrint(&env->map);
+    }
 }
 
 void loop(void){
