@@ -27,19 +27,6 @@ typedef struct {
     obst_t* set;
 } obstSet_t;
 
-typedef struct {
-    bool dialogMode;
-    bool resultMode;
-    map_t map;
-    obstSet_t obsts;
-    unsigned int accessRow;
-    unsigned int accessCol;
-    
-    // TODO
-    // create robSet_t
-    unsigned int numbRobs;
-} terra_t;
-
 #define MODE_NONE 0x0
 #define MODE_ACTIVE 0x1
 #define MODE_EXPLORE 0x2
@@ -57,5 +44,15 @@ typedef struct {
     unsigned int length;
     rob_t* set;
 } robSet_t;
+
+typedef struct {
+    map_t map;
+    robSet_t robs;
+    obstSet_t obsts;
+    bool dialogMode;
+    bool resultMode;
+    unsigned int accessRow;
+    unsigned int accessCol;
+} terra_t;
 
 #endif

@@ -6,6 +6,7 @@
 #include "map.h"
 #include "obstacle.h"
 #include "point.h"
+#include "robot.h"
 
 void emptyStdIn(void){
     while(getchar() != '\n');
@@ -189,16 +190,14 @@ bool readNumbRobs(terra_t* env){
         return false;
     }
     
-    env->numbRobs = numb;
-    
-    // TODO
-    // robsInit(robSet)
+    env->robs.length = numb;
+    robSetInit(&env->robs);
     
     if(env->dialogMode){
         printf(
             "< Number of robots: %u\n"
             "\n",
-            env->numbRobs
+            env->robs.length
         );
     }
     
@@ -287,11 +286,7 @@ bool readObsts(terra_t* env){
         if(env->dialogMode){
             printf(
                 "< Position of obstacle %u: %u-%u %u-%u\n",
-                o,
-                obst.top,
-                obst.bottom,
-                obst.left,
-                obst.right
+                o, obst.top, obst.bottom, obst.left, obst.right
             );
         }
     }
