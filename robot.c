@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "robot.h"
 
 void robSetInit(robSet_t* set){
