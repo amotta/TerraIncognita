@@ -27,20 +27,16 @@ typedef struct {
     obst_t* set;
 } obstSet_t;
 
-#define MODE_NONE 0x0
-#define MODE_ACTIVE 0x1
-#define MODE_EXPLORE 0x2
-#define MODE_OBSTACLE = 0x4
-
 typedef struct {
-    char mode;
-    char move;
+    bool active;
+    int dist;
     unsigned int row;
     unsigned int col;
 } rob_t;
 
 typedef struct {
     unsigned int active;
+    unsigned int planned;
     unsigned int length;
     rob_t* set;
 } robSet_t;
