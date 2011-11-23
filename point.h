@@ -5,7 +5,8 @@
 
 #include "types.h"
 
-bool pointInMap(unsigned int, unsigned int, map_t*);
-bool pointOnBorder(unsigned int, unsigned int, map_t*);
+bool pointInMap(unsigned int row, unsigned int col, map_t* map);
+bool pointOnBorder(unsigned int row, unsigned int  col, map_t* map);
+char pointGetBorder(unsigned int row, unsigned int col, map_t* map);
 
 #endif
