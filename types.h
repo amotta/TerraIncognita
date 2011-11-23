@@ -28,16 +28,27 @@ typedef struct {
 } obstSet_t;
 
 typedef struct {
+    bool active;
+    int dist;
+    unsigned int row;
+    unsigned int col;
+} rob_t;
+
+typedef struct {
+    unsigned int active;
+    unsigned int planned;
+    unsigned int length;
+    rob_t* set;
+} robSet_t;
+
+typedef struct {
+    map_t map;
+    robSet_t robs;
+    obstSet_t obsts;
     bool dialogMode;
     bool resultMode;
-    map_t map;
-    obstSet_t obsts;
     unsigned int accessRow;
     unsigned int accessCol;
-    
-    // TODO
-    // create robSet_t
-    unsigned int numbRobs;
 } terra_t;
 
 #endif
