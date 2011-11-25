@@ -7,6 +7,11 @@
 #define FIELD_ACCESS 'A'
 #define FIELD_OBSTACLE 'O'
 
+#define DIR_TOP (1 << 0)
+#define DIR_BOTTOM (1 << 1)
+#define DIR_LEFT (1 << 2)
+#define DIR_RIGHT (1 << 3)
+
 typedef struct {
     unsigned int rows;
     unsigned int cols;
@@ -37,12 +42,20 @@ typedef struct {
 typedef struct {
     unsigned int active;
     unsigned int planned;
+    unsigned int distance;
     unsigned int length;
     rob_t* set;
 } robSet_t;
 
 typedef struct {
+    unsigned int numbRobs;
+    unsigned int dist;
+    char dir;
+} plan_t;
+
+typedef struct {
     map_t map;
+    plan_t plan;
     robSet_t robs;
     obstSet_t obsts;
     bool dialogMode;

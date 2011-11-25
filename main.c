@@ -347,6 +347,40 @@ bool readData(terra_t* env){
     return ok;
 }
 
+void plan(terra_t* env){
+    unsigned int dim;
+    unsigned int numbRobs;
+    
+    switch(pointGetBorder(env->accessRow, env->accessCol, &env->map)){
+        case DIR_TOP:
+            dim = env->map.cols;
+            env->plan.dir = DIR_BOTTOM;
+            break;
+        case DIR_BOTTOM:
+            dim = env->map.cols;
+            env->plan.dir = DIR_TOP;
+            break;
+        case DIR_LEFT:
+            dim = env->map.rows;
+            env->plan.dir = DIR_RIGHT;
+            break;
+        case DIR_RIGHT:
+            dim = env->map.rows;
+            env->plan.dir = DIR_LEFT;
+            break;
+    }
+    
+    numbRobs = (dim + 1) / 2;
+    
+    // not enough robots?
+    if(numbRobs > env->robs.length){
+        numbRobs = env->robs.length;
+    }
+    
+    env->plan.numbRobs = numbRobs;
+    env->plan.dist = 2 * env->plan.numbRobs;
+}
+
 void init(terra_t* env){
     env->map.map = NULL;
     env->obsts.set = NULL;
@@ -355,6 +389,8 @@ void init(terra_t* env){
         return;
     }
     
+    plan(env);
+    
     if(env->resultMode){
         mapPrint(&env->map);
     }
@@ -362,6 +398,9 @@ void init(terra_t* env){
 
 void loop(void){
     // TODO
+    // if(!isDone(&map)){
+    //     return;
+    //}
 }
 
 void clean(terra_t* env){

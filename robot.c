@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+#include "point.h"
 #include "robot.h"
 
 void robInit(rob_t* rob){
@@ -15,12 +16,6 @@ void robSetInit(robSet_t* set){
     for(r = 0; r < set->length; r++){
         robInit(&set->set[r]);
     }
-}
-
-void robSetPlan(robSet_t* set, map_t* map){
-    // TODO
-    // Calculate number of robots
-    // and store in set->planned
 }
 
 void robSetFree(robSet_t* set){

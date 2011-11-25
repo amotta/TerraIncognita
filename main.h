@@ -1,8 +1,6 @@
 #ifndef TerraIncognita_main_h
 #define TerraIncognita_main_h
 
-#include <stdbool.h>
-
 #include "types.h"
 
 void emptyStdIn(void);
@@ -16,6 +14,7 @@ bool readNumbObsts(terra_t*);
 bool readObsts(terra_t*);
 bool readCoord(unsigned int*);
 bool readData(terra_t*);
+void plan(terra_t*);
 void init(terra_t*);
 void loop(void);
 void clean(terra_t*);
