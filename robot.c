@@ -13,13 +13,78 @@ void robSpawn(rob_t* rob, terra_t* env){
     rob->active = true;
     rob->row = env->accessRow;
     rob->col = env->accessCol;
-    rob->mode = MODE_EXPLORE;
+    rob->mode = MODE_PREPARE;
     
     mapExplore(&env->robs.map, &env->map, rob->row, rob->col);
 }
 
+void robMovePrepare(rob_t* rob, terra_t* env){
+    switch(env->plan.dir){
+        case DIR_TOP:
+        case DIR_BOTTOM:
+            if(rob->col > 1){
+                rob->col--;
+            }
+            
+            if(rob->col < 1){
+                rob->col++;
+            }
+            
+            if(rob->col == 1){
+                rob->mode = MODE_EXPLORE;
+            }
+            break;
+            
+        case DIR_LEFT:
+        case DIR_RIGHT:
+            if(rob->row > 1){
+                rob->row--;
+            }
+            
+            if(rob->row < 1){
+                rob->row++;
+            }
+            
+            if(rob->row == 1){
+                rob->mode = MODE_EXPLORE;
+            }
+            break;
+    }
+}
+
+void robMoveExplore(rob_t* rob, terra_t* env){
+    switch(env->plan.dir){
+        case DIR_TOP:
+            rob->row--;
+            break;
+        case DIR_BOTTOM:
+            rob->row++;
+            break;
+        case DIR_LEFT:
+            rob->col--;
+            break;
+        case DIR_RIGHT:
+            rob->col++;
+            break;
+    }
+}
+
+void robMoveAvoid(rob_t* rob, terra_t* env){
+    
+}
+
 void robMove(rob_t* rob, terra_t* env){
-    rob->row++;
+    switch(rob->mode){
+        case MODE_PREPARE:
+            robMovePrepare(rob, env);
+            break;
+        case MODE_EXPLORE:
+            robMoveExplore(rob, env);
+            break;
+        case MODE_AVOID:
+            robMoveAvoid(rob, env);
+            break;
+    }
     
     mapExplore(&env->robs.map, &env->map, rob->row, rob->col);
 }

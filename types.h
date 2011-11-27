@@ -15,8 +15,9 @@
 #define DIR_RIGHT (1 << 3)
 #define DIR_UNKNOWN 0
 
-#define MODE_EXPLORE 1
-#define MODE_AVOID 2
+#define MODE_PREPARE 1
+#define MODE_EXPLORE 2
+#define MODE_AVOID 3
 
 typedef struct {
     unsigned int rows;
