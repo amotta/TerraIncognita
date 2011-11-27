@@ -12,6 +12,9 @@
 #define DIR_LEFT (1 << 2)
 #define DIR_RIGHT (1 << 3)
 
+#define MODE_EXPLORE 1
+#define MODE_AVOID 2
+
 typedef struct {
     unsigned int rows;
     unsigned int cols;
@@ -37,12 +40,13 @@ typedef struct {
     unsigned int dist;
     unsigned int row;
     unsigned int col;
+    char mode;
 } rob_t;
 
 typedef struct {
+    map_t map;
     unsigned int active;
     unsigned int planned;
-    unsigned int distance;
     unsigned int length;
     rob_t* set;
 } robSet_t;

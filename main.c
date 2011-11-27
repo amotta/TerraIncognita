@@ -398,6 +398,7 @@ void plan(terra_t* env){
 
 void init(terra_t* env){
     env->map.map = NULL;
+    env->robs.map.map = NULL;
     env->obsts.set = NULL;
     
     if(!readData(env)){
@@ -418,17 +419,27 @@ void loop(terra_t* env){
     // while(!isComplete(&map)){
     while(true){
         for(r = 0; r < env->robs.active; r++){
-            // robMode(r)
+            // robMove(r)
         }
         
         if(env->robs.active < env->plan.numbRobs){
-            robSpawn(env);
+            robSpawn(&env->robs.set[env->robs.active], env);
+            env->robs.active++;
         }
+        
+        if(env->resultMode){
+            // TODO
+            // show map
+        }
+        
+        // DEBUG
+        getchar();
     }
 }
 
 void clean(terra_t* env){
     mapFree(&env->map);
+    mapFree(&env->robs.map);
     obstSetFree(&env->obsts);
 }
 

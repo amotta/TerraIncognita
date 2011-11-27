@@ -8,14 +8,15 @@ void robInit(rob_t* rob){
     rob->active = false;
 }
 
-void robSpawn(terra_t* env){
-    rob_t* rob = &env->robs.set[env->robs.active];
-    
+void robSpawn(rob_t* rob, terra_t* env){
     rob->active = true;
     rob->row = env->accessRow;
     rob->col = env->accessCol;
-    
-    env->robs.active++;
+    rob->mode = MODE_EXPLORE;
+}
+
+void robMove(rob_t* rob, terra_t* env){
+
 }
 
 void robSetInit(robSet_t* set){
