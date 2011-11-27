@@ -39,19 +39,19 @@ void mapSet(map_t* map, unsigned int row, unsigned int col, char set){
 }
 
 void mapExplore(map_t* dest, map_t* src, unsigned int r, unsigned int c){
-    if(pointInMap(r - 1, c, dest)){
+    if(pointInMap(r - 1, c, dest) && mapGet(dest, r - 1, c) == FIELD_UNKNOWN){
         mapSet(dest, r - 1, c, mapGet(src, r - 1, c)); 
     }
     
-    if(pointInMap(r + 1, c, dest)){
+    if(pointInMap(r + 1, c, dest) && mapGet(dest, r + 1, c) == FIELD_UNKNOWN){
         mapSet(dest, r + 1, c, mapGet(src, r + 1, c)); 
     }
     
-    if(pointInMap(r, c - 1, dest)){
+    if(pointInMap(r, c - 1, dest) && mapGet(dest, r, c - 1) == FIELD_UNKNOWN){
         mapSet(dest, r, c - 1, mapGet(src, r, c - 1));
     }
     
-    if(pointInMap(r, c + 1, dest)){
+    if(pointInMap(r, c + 1, dest) && mapGet(dest, r, c + 1) == FIELD_UNKNOWN){
         mapSet(dest, r, c + 1, mapGet(src, r, c + 1));
     }
 }
