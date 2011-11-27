@@ -13,7 +13,7 @@
 #define DIR_BOTTOM (1 << 1)
 #define DIR_LEFT (1 << 2)
 #define DIR_RIGHT (1 << 3)
-#define DIR_UNKNOWN 0
+#define DIR_NONE 0
 
 #define MODE_PREPARE 1
 #define MODE_EXPLORE 2

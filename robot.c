@@ -15,46 +15,47 @@ void robSpawn(rob_t* rob, terra_t* env){
     rob->col = env->accessCol;
     rob->mode = MODE_PREPARE;
     
+    mapSet(&env->robs.map, rob->row, rob->col, FIELD_ROBOT);
     mapExplore(&env->robs.map, &env->map, rob->row, rob->col);
 }
 
-void robMovePrepare(rob_t* rob, terra_t* env){
+char robThinkPrepare(rob_t* rob, terra_t* env){
     switch(env->plan.dir){
         case DIR_TOP:
         case DIR_BOTTOM:
             if(rob->col == env->plan.start){
                 if(rob->row > rob->dist){
-                    rob->row--;
+                    return DIR_TOP;
                 }
                 
                 if(rob->row < rob->dist){
-                    rob->row++;
+                    return DIR_BOTTOM;
                 }
                 
                 if(rob->row == rob->dist){
                     rob->mode = MODE_EXPLORE;
-            
                 }
             }
             
             if(rob->col > env->plan.start){
-                rob->col--;
+                return DIR_LEFT;
             }
             
             if(rob->col < env->plan.start){
-                rob->col++;
+                return DIR_RIGHT;
             }
+            
             break;
             
         case DIR_LEFT:
         case DIR_RIGHT:
             if(rob->row == env->plan.start){
                 if(rob->col > rob->dist){
-                    rob->col--;
+                    return DIR_LEFT;
                 }
                 
                 if(rob->col < rob->dist){
-                    rob->col++;
+                    return DIR_RIGHT;
                 }
                 
                 if(rob->col == rob->dist){
@@ -63,51 +64,92 @@ void robMovePrepare(rob_t* rob, terra_t* env){
             }
             
             if(rob->row > env->plan.start){
-                rob->row--;
+                return DIR_TOP;
             }
             
             if(rob->row < env->plan.start){
-                rob->row++;
+                return DIR_BOTTOM;
             }
+            
             break;
     }
+    
+    return DIR_NONE;
 }
 
-void robMoveExplore(rob_t* rob, terra_t* env){
+char robThinkExplore(rob_t* rob, terra_t* env){
     switch(rob->dir){
         case DIR_TOP:
-            rob->row--;
-            break;
+            return DIR_TOP;
         case DIR_BOTTOM:
-            rob->row++;
-            break;
+            return DIR_BOTTOM;
         case DIR_LEFT:
-            rob->col--;
-            break;
+            return DIR_LEFT;
         case DIR_RIGHT:
-            rob->col++;
-            break;
+            return DIR_RIGHT;
     }
-}
-
-void robMoveAvoid(rob_t* rob, terra_t* env){
     
+    return DIR_NONE;
 }
 
-void robMove(rob_t* rob, terra_t* env){
+char robThinkAvoid(rob_t* rob, terra_t* env){
+    return DIR_NONE;
+}
+
+char robThink(rob_t* rob, terra_t* env){
     switch(rob->mode){
         case MODE_PREPARE:
-            robMovePrepare(rob, env);
-            break;
+            return robThinkPrepare(rob, env);
         case MODE_EXPLORE:
-            robMoveExplore(rob, env);
-            break;
+            return robThinkExplore(rob, env);
         case MODE_AVOID:
-            robMoveAvoid(rob, env);
+            return robThinkAvoid(rob, env);
+    }
+    
+    return DIR_NONE;
+}
+
+void robMove(rob_t* rob, char dir, terra_t* env){
+    char field;
+    unsigned int newRow = rob->row;
+    unsigned int newCol = rob->col;
+    
+    switch(dir){
+        case DIR_TOP:
+            newRow--;
+            break;
+        case DIR_BOTTOM:
+            newRow++;
+            break;
+        case DIR_LEFT:
+            newCol--;
+            break;
+        case DIR_RIGHT:
+            newCol++;
             break;
     }
     
-    mapExplore(&env->robs.map, &env->map, rob->row, rob->col);
+    field = mapGet(&env->robs.map, newRow, newCol);
+    if(field == FIELD_EMPTY || field == FIELD_ACCESS){
+        mapExplore(&env->robs.map, &env->map, newRow, newCol);
+        
+        mapSet(
+            &env->robs.map,
+            rob->row,
+            rob->col,
+            mapGet(&env->map, rob->row, rob->col)
+        );
+        
+        mapSet(
+            &env->robs.map,
+            newRow,
+            newCol,
+            FIELD_ROBOT
+        );
+        
+        rob->row = newRow;
+        rob->col = newCol;
+    }
 }
 
 void robSetInit(robSet_t* set){

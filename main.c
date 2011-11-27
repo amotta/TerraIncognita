@@ -454,13 +454,18 @@ void init(terra_t* env){
 }
 
 void loop(terra_t* env){
+    char dir;
     unsigned int r;
     
     // TODO
     // while(!isComplete(&map)){
     while(true){
         for(r = 0; r < env->robs.active; r++){
-            robMove(&env->robs.set[r], env);
+            dir = robThink(&env->robs.set[r], env);
+            
+            if(dir != DIR_NONE){
+                robMove(&env->robs.set[r], dir, env);
+            }
         }
         
         if(env->robs.active < env->plan.numbRobs){

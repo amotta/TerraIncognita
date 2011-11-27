@@ -35,6 +35,6 @@ char pointGetBorder(unsigned int row, unsigned int col, map_t* map){
         return DIR_RIGHT;
     }
     
-    printf("ERROR: Access point at invalid position\n");
-    return DIR_UNKNOWN;
+    printf("ERROR: Point not on border.\n");
+    return DIR_NONE;
 }
