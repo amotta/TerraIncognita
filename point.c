@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "point.h"
 
 bool pointInMap(unsigned int row, unsigned int col, map_t* map){
@@ -32,4 +34,7 @@ char pointGetBorder(unsigned int row, unsigned int col, map_t* map){
     if(col == map->cols -1 ){
         return DIR_RIGHT;
     }
+    
+    printf("ERROR: Access point at invalid position\n");
+    return DIR_UNKNOWN;
 }
