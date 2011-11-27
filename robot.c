@@ -22,6 +22,21 @@ void robMovePrepare(rob_t* rob, terra_t* env){
     switch(env->plan.dir){
         case DIR_TOP:
         case DIR_BOTTOM:
+            if(rob->col == env->plan.start){
+                if(rob->row > rob->dist){
+                    rob->row--;
+                }
+                
+                if(rob->row < rob->dist){
+                    rob->row++;
+                }
+                
+                if(rob->row == rob->dist){
+                    rob->mode = MODE_EXPLORE;
+            
+                }
+            }
+            
             if(rob->col > env->plan.start){
                 rob->col--;
             }
@@ -29,14 +44,24 @@ void robMovePrepare(rob_t* rob, terra_t* env){
             if(rob->col < env->plan.start){
                 rob->col++;
             }
-            
-            if(rob->col == env->plan.start){
-                rob->mode = MODE_EXPLORE;
-            }
             break;
             
         case DIR_LEFT:
         case DIR_RIGHT:
+            if(rob->row == env->plan.start){
+                if(rob->col > rob->dist){
+                    rob->col--;
+                }
+                
+                if(rob->col < rob->dist){
+                    rob->col++;
+                }
+                
+                if(rob->col == rob->dist){
+                    rob->mode = MODE_EXPLORE;
+                }
+            }
+            
             if(rob->row > env->plan.start){
                 rob->row--;
             }
@@ -44,16 +69,12 @@ void robMovePrepare(rob_t* rob, terra_t* env){
             if(rob->row < env->plan.start){
                 rob->row++;
             }
-            
-            if(rob->row == env->plan.start){
-                rob->mode = MODE_EXPLORE;
-            }
             break;
     }
 }
 
 void robMoveExplore(rob_t* rob, terra_t* env){
-    switch(env->plan.dir){
+    switch(rob->dir){
         case DIR_TOP:
             rob->row--;
             break;

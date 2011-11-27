@@ -44,6 +44,7 @@ typedef struct {
     unsigned int dist;
     unsigned int row;
     unsigned int col;
+    char dir;
     char mode;
 } rob_t;
 

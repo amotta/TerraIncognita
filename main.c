@@ -352,6 +352,7 @@ bool readData(terra_t* env){
 
 void plan(terra_t* env){
     unsigned int r;
+    unsigned int dir;
     unsigned int dim;
     unsigned int access;
     unsigned int numbRobs;
@@ -388,8 +389,39 @@ void plan(terra_t* env){
         env->plan.numbRobs = numbRobs;
     }
     
+    // calculate start position and direction
+    if(dim - access - 1 > access){
+        env->plan.start = 0;
+        
+        switch(env->plan.dir){
+            case DIR_TOP:
+            case DIR_BOTTOM:
+                dir = DIR_RIGHT;
+                break;
+            case DIR_LEFT:
+            case DIR_RIGHT:
+                dir = DIR_BOTTOM;
+                break;
+        }
+    }else{
+        env->plan.start = dim - 1;
+        
+        switch(env->plan.dir){
+            case DIR_TOP:
+            case DIR_BOTTOM:
+                dir = DIR_LEFT;
+                break;
+            case DIR_LEFT:
+            case DIR_RIGHT:
+                dir = DIR_TOP;
+                break;
+        }
+    }
+    
     // calculate rob position
     for(r = 0; r < env->plan.numbRobs; r++){
+        env->robs.set[r].dir = dir;
+        
         switch(env->plan.dir){
             case DIR_TOP:
             case DIR_LEFT:
@@ -403,13 +435,6 @@ void plan(terra_t* env){
     }
     
     env->plan.dist = 2 * env->plan.numbRobs;
-    
-    // calculate start position
-    if(dim - access - 1 > access){
-        env->plan.start = 0;
-    }else{
-        env->plan.start = dim - 1;
-    }
 }
 
 void init(terra_t* env){
