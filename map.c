@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "point.h"
 #include "map.h"
 
 void mapInit(map_t* map, char fill){
@@ -34,6 +35,24 @@ void mapSet(map_t* map, unsigned int row, unsigned int col, char set){
     
     if(i < map->length){
         map->map[i] = set;
+    }
+}
+
+void mapExplore(map_t* dest, map_t* src, unsigned int r, unsigned int c){
+    if(pointInMap(r - 1, c, dest)){
+        mapSet(dest, r - 1, c, mapGet(src, r - 1, c)); 
+    }
+    
+    if(pointInMap(r + 1, c, dest)){
+        mapSet(dest, r + 1, c, mapGet(src, r + 1, c)); 
+    }
+    
+    if(pointInMap(r, c - 1, dest)){
+        mapSet(dest, r, c - 1, mapGet(src, r, c - 1));
+    }
+    
+    if(pointInMap(r, c + 1, dest)){
+        mapSet(dest, r, c + 1, mapGet(src, r, c + 1));
     }
 }
 
