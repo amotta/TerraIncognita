@@ -353,23 +353,28 @@ bool readData(terra_t* env){
 void plan(terra_t* env){
     unsigned int r;
     unsigned int dim;
+    unsigned int access;
     unsigned int numbRobs;
     
     switch(pointGetBorder(env->accessRow, env->accessCol, &env->map)){
         case DIR_TOP:
             dim = env->map.rows;
+            access = env->accessCol;
             env->plan.dir = DIR_BOTTOM;
             break;
         case DIR_BOTTOM:
             dim = env->map.rows;
+            access = env->accessCol;
             env->plan.dir = DIR_TOP;
             break;
         case DIR_LEFT:
             dim = env->map.cols;
+            access = env->accessRow;
             env->plan.dir = DIR_RIGHT;
             break;
         case DIR_RIGHT:
             dim = env->map.cols;
+            access = env->accessRow;
             env->plan.dir = DIR_LEFT;
             break;
     }
@@ -398,6 +403,13 @@ void plan(terra_t* env){
     }
     
     env->plan.dist = 2 * env->plan.numbRobs;
+    
+    // calculate start position
+    if(dim - access - 1 > access){
+        env->plan.start = 0;
+    }else{
+        env->plan.start = dim - 1;
+    }
 }
 
 void init(terra_t* env){

@@ -22,30 +22,30 @@ void robMovePrepare(rob_t* rob, terra_t* env){
     switch(env->plan.dir){
         case DIR_TOP:
         case DIR_BOTTOM:
-            if(rob->col > 1){
+            if(rob->col > env->plan.start){
                 rob->col--;
             }
             
-            if(rob->col < 1){
+            if(rob->col < env->plan.start){
                 rob->col++;
             }
             
-            if(rob->col == 1){
+            if(rob->col == env->plan.start){
                 rob->mode = MODE_EXPLORE;
             }
             break;
             
         case DIR_LEFT:
         case DIR_RIGHT:
-            if(rob->row > 1){
+            if(rob->row > env->plan.start){
                 rob->row--;
             }
             
-            if(rob->row < 1){
+            if(rob->row < env->plan.start){
                 rob->row++;
             }
             
-            if(rob->row == 1){
+            if(rob->row == env->plan.start){
                 rob->mode = MODE_EXPLORE;
             }
             break;
