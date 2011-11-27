@@ -6,11 +6,14 @@
 #define FIELD_EMPTY ' '
 #define FIELD_ACCESS 'A'
 #define FIELD_OBSTACLE 'O'
+#define FIELD_ROBOT 'R'
+#define FIELD_UNKNOWN '?'
 
 #define DIR_TOP (1 << 0)
 #define DIR_BOTTOM (1 << 1)
 #define DIR_LEFT (1 << 2)
 #define DIR_RIGHT (1 << 3)
+#define DIR_UNKNOWN 0
 
 #define MODE_EXPLORE 1
 #define MODE_AVOID 2

@@ -4,7 +4,8 @@
 #include "types.h"
 
 void robInit(rob_t* rob);
-void robSpawn(rob_t*, terra_t* env);
+void robSpawn(rob_t* rob, terra_t* env);
+void robMove(rob_t* rob, terra_t* env);
 void robSetInit(robSet_t* set);
 void robSetFree(robSet_t* set);
 

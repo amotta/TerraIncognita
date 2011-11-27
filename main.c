@@ -88,7 +88,7 @@ bool readResultMode(terra_t* env){
 
 bool readMapSize(terra_t* env){
     int rows;
-    int cols; 
+    int cols;
     
     if(env->dialogMode){
         printf("ENTER MAP SIZE\n");
@@ -109,12 +109,15 @@ bool readMapSize(terra_t* env){
     env->map.cols = cols;
     mapInit(&env->map, FIELD_EMPTY);
     
+    env->robs.map.rows = rows;
+    env->robs.map.cols = cols;
+    mapInit(&env->robs.map, FIELD_UNKNOWN);
+    
     if(env->dialogMode){
         printf(
             "< Map size: %u %u\n"
             "\n",
-            env->map.rows,
-            env->map.cols
+            env->map.rows, env->map.cols
         );
     }
     
@@ -380,6 +383,7 @@ void plan(terra_t* env){
         env->plan.numbRobs = numbRobs;
     }
     
+    // calculate rob position
     for(r = 0; r < env->plan.numbRobs; r++){
         switch(env->plan.dir){
             case DIR_TOP:
@@ -419,7 +423,7 @@ void loop(terra_t* env){
     // while(!isComplete(&map)){
     while(true){
         for(r = 0; r < env->robs.active; r++){
-            // robMove(r)
+            robMove(&env->robs.set[r], env);
         }
         
         if(env->robs.active < env->plan.numbRobs){
@@ -428,11 +432,9 @@ void loop(terra_t* env){
         }
         
         if(env->resultMode){
-            // TODO
-            // show map
+            mapPrint(&env->robs.map);
         }
         
-        // DEBUG
         getchar();
     }
 }
