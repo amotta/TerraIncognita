@@ -3,8 +3,19 @@
 #include "point.h"
 #include "robot.h"
 
+
 void robInit(rob_t* rob){
     rob->active = false;
+}
+
+void robSpawn(terra_t* env){
+    rob_t* rob = &env->robs.set[env->robs.active];
+    
+    rob->active = true;
+    rob->row = env->accessRow;
+    rob->col = env->accessCol;
+    
+    env->robs.active++;
 }
 
 void robSetInit(robSet_t* set){

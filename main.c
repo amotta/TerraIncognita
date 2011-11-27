@@ -348,24 +348,25 @@ bool readData(terra_t* env){
 }
 
 void plan(terra_t* env){
+    unsigned int r;
     unsigned int dim;
     unsigned int numbRobs;
     
     switch(pointGetBorder(env->accessRow, env->accessCol, &env->map)){
         case DIR_TOP:
-            dim = env->map.cols;
+            dim = env->map.rows;
             env->plan.dir = DIR_BOTTOM;
             break;
         case DIR_BOTTOM:
-            dim = env->map.cols;
+            dim = env->map.rows;
             env->plan.dir = DIR_TOP;
             break;
         case DIR_LEFT:
-            dim = env->map.rows;
+            dim = env->map.cols;
             env->plan.dir = DIR_RIGHT;
             break;
         case DIR_RIGHT:
-            dim = env->map.rows;
+            dim = env->map.cols;
             env->plan.dir = DIR_LEFT;
             break;
     }
@@ -374,10 +375,24 @@ void plan(terra_t* env){
     
     // not enough robots?
     if(numbRobs > env->robs.length){
-        numbRobs = env->robs.length;
+        env->plan.numbRobs = env->robs.length;
+    }else{
+        env->plan.numbRobs = numbRobs;
     }
     
-    env->plan.numbRobs = numbRobs;
+    for(r = 0; r < env->plan.numbRobs; r++){
+        switch(env->plan.dir){
+            case DIR_TOP:
+            case DIR_LEFT:
+                env->robs.set[r].dist = (dim - 1 - 2 * r);
+                break;
+            case DIR_BOTTOM:
+            case DIR_RIGHT:
+                env->robs.set[r].dist = 1 + 2 * r;
+                break;
+        }
+    }
+    
     env->plan.dist = 2 * env->plan.numbRobs;
 }
 
@@ -396,11 +411,20 @@ void init(terra_t* env){
     }
 }
 
-void loop(void){
+void loop(terra_t* env){
+    unsigned int r;
+    
     // TODO
-    // if(!isDone(&map)){
-    //     return;
-    //}
+    // while(!isComplete(&map)){
+    while(true){
+        for(r = 0; r < env->robs.active; r++){
+            // robMode(r)
+        }
+        
+        if(env->robs.active < env->plan.numbRobs){
+            robSpawn(env);
+        }
+    }
 }
 
 void clean(terra_t* env){
@@ -412,7 +436,7 @@ int main(void){
     terra_t env;
     
     init(&env);
-    loop();
+    loop(&env);
     clean(&env);
     
     return EXIT_SUCCESS;

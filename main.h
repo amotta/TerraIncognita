@@ -16,7 +16,7 @@ bool readCoord(unsigned int*);
 bool readData(terra_t*);
 void plan(terra_t*);
 void init(terra_t*);
-void loop(void);
+void loop(terra_t*);
 void clean(terra_t*);
 int main(void);
 

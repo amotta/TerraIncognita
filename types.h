@@ -34,7 +34,7 @@ typedef struct {
 
 typedef struct {
     bool active;
-    int dist;
+    unsigned int dist;
     unsigned int row;
     unsigned int col;
 } rob_t;
