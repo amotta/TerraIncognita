@@ -5,6 +5,7 @@
 
 void robInit(rob_t* rob);
 void robSpawn(rob_t* rob, terra_t* env);
+void robCheckMode(rob_t* rob, terra_t* env);
 char robThinkPrepare(rob_t* rob, terra_t* env);
 char robThinkExplore(rob_t* rob, terra_t* env);
 char robThinkAvoid(rob_t* rob, terra_t* env);

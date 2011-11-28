@@ -19,24 +19,39 @@ void robSpawn(rob_t* rob, terra_t* env){
     mapExplore(&env->robs.map, &env->map, rob->row, rob->col);
 }
 
+void robCheckMode(rob_t* rob, terra_t* env){
+    switch(rob->mode){
+        case MODE_PREPARE:
+            switch(env->plan.dir){
+                case DIR_TOP:
+                case DIR_BOTTOM:
+                    if(rob->col == env->plan.start){
+                        rob->mode = MODE_EXPLORE;
+                    }
+                    break;
+                    
+                case DIR_LEFT:
+                case DIR_RIGHT:
+                    if(rob->row == env->plan.start){
+                        rob->mode = MODE_EXPLORE;
+                    }
+                    break;
+            }
+            
+            break;
+            
+        case MODE_EXPLORE:
+            break;
+            
+        case MODE_AVOID:
+            break;
+    }
+}
+
 char robThinkPrepare(rob_t* rob, terra_t* env){
     switch(env->plan.dir){
         case DIR_TOP:
         case DIR_BOTTOM:
-            if(rob->col == env->plan.start){
-                if(rob->row > rob->dist){
-                    return DIR_TOP;
-                }
-                
-                if(rob->row < rob->dist){
-                    return DIR_BOTTOM;
-                }
-                
-                if(rob->row == rob->dist){
-                    rob->mode = MODE_EXPLORE;
-                }
-            }
-            
             if(rob->col > env->plan.start){
                 return DIR_LEFT;
             }
@@ -49,20 +64,6 @@ char robThinkPrepare(rob_t* rob, terra_t* env){
             
         case DIR_LEFT:
         case DIR_RIGHT:
-            if(rob->row == env->plan.start){
-                if(rob->col > rob->dist){
-                    return DIR_LEFT;
-                }
-                
-                if(rob->col < rob->dist){
-                    return DIR_RIGHT;
-                }
-                
-                if(rob->col == rob->dist){
-                    rob->mode = MODE_EXPLORE;
-                }
-            }
-            
             if(rob->row > env->plan.start){
                 return DIR_TOP;
             }
@@ -78,6 +79,33 @@ char robThinkPrepare(rob_t* rob, terra_t* env){
 }
 
 char robThinkExplore(rob_t* rob, terra_t* env){
+    // correct row / col if needed
+    switch(env->plan.dir){
+        case DIR_TOP:
+        case DIR_BOTTOM:
+            if(rob->row > rob->dist){
+                return DIR_TOP;
+            }
+            
+            if(rob->row < rob->dist){
+                return DIR_BOTTOM;
+            }
+            
+            break;
+        
+        case DIR_LEFT:
+        case DIR_RIGHT:
+            if(rob->col > rob->dist){
+                return DIR_LEFT;
+            }
+            
+            if(rob->col < rob->dist){
+                return DIR_RIGHT;
+            }
+
+            break;
+    }
+    
     switch(rob->dir){
         case DIR_TOP:
             return DIR_TOP;
@@ -97,6 +125,8 @@ char robThinkAvoid(rob_t* rob, terra_t* env){
 }
 
 char robThink(rob_t* rob, terra_t* env){
+    robCheckMode(rob, env);
+    
     switch(rob->mode){
         case MODE_PREPARE:
             return robThinkPrepare(rob, env);
@@ -130,9 +160,12 @@ void robMove(rob_t* rob, char dir, terra_t* env){
     }
     
     field = mapGet(&env->robs.map, newRow, newCol);
+    
+    // only move on empty fields or access field
     if(field == FIELD_EMPTY || field == FIELD_ACCESS){
         mapExplore(&env->robs.map, &env->map, newRow, newCol);
         
+        // explore old position
         mapSet(
             &env->robs.map,
             rob->row,
@@ -140,12 +173,8 @@ void robMove(rob_t* rob, char dir, terra_t* env){
             mapGet(&env->map, rob->row, rob->col)
         );
         
-        mapSet(
-            &env->robs.map,
-            newRow,
-            newCol,
-            FIELD_ROBOT
-        );
+        // move robot
+        mapSet(&env->robs.map, newRow, newCol, FIELD_ROBOT);
         
         rob->row = newRow;
         rob->col = newCol;
