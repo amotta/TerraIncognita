@@ -38,6 +38,16 @@ void mapSet(map_t* map, unsigned int row, unsigned int col, char set){
     }
 }
 
+bool mapIsEmpty(map_t* map, unsigned int row, unsigned col){
+    char field = mapGet(map, row, col);
+    
+    if(field == FIELD_EMPTY || field == FIELD_ACCESS){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 void mapExplore(map_t* dest, map_t* src, unsigned int r, unsigned int c){
     if(pointInMap(r - 1, c, dest) && mapGet(dest, r - 1, c) == FIELD_UNKNOWN){
         mapSet(dest, r - 1, c, mapGet(src, r - 1, c)); 
