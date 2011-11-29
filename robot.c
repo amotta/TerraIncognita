@@ -21,10 +21,7 @@ void robSpawn(rob_t* rob, terra_t* env){
 
 void robCheckMode(rob_t* rob, terra_t* env){
     switch(rob->mode){
-            
         case MODE_PREPARE:
-            
-            // change to exploration mode when ready
             switch(env->plan.dir){
                 case DIR_TOP:
                 case DIR_BOTTOM:
@@ -33,7 +30,7 @@ void robCheckMode(rob_t* rob, terra_t* env){
                     }
                     
                     break;
-                
+                    
                 case DIR_LEFT:
                 case DIR_RIGHT:
                     if(rob->row == env->plan.start){
@@ -155,9 +152,6 @@ char robThinkExplore(rob_t* rob, terra_t* env){
                     }
             }
             
-            // TODO
-            rob->mode = MODE_AVOID;
-            
             break;
             
         case DIR_LEFT:
@@ -187,17 +181,65 @@ char robThinkExplore(rob_t* rob, terra_t* env){
                         return DIR_BOTTOM;
                     }
             }
-            
-            // TODO
-            rob->mode = MODE_AVOID;
 
             break;
     }
+    
+    // TODO
+    rob->mode = MODE_AVOID;
     
     return DIR_NONE;
 }
 
 char robThinkAvoid(rob_t* rob, terra_t* env){
+    // TODO
+    // Move this to robChangeMode
+    switch(rob->dir){
+        case DIR_TOP:
+            if(mapIsEmpty(&env->robs.map, rob->row - 1, rob->col)){
+                rob->mode = MODE_EXPLORE;
+                return DIR_TOP;
+            }
+            break;
+        
+        case DIR_BOTTOM:
+            if(mapIsEmpty(&env->robs.map, rob->row + 1, rob->col)){
+                rob->mode = MODE_EXPLORE;
+                return DIR_BOTTOM;
+            }
+            break;
+        
+        case DIR_LEFT:
+            if(mapIsEmpty(&env->robs.map, rob->row, rob->col - 1)){
+                rob->mode = MODE_EXPLORE;
+                return DIR_LEFT;
+            }
+            break;
+        
+        case DIR_RIGHT:
+            if(mapIsEmpty(&env->robs.map, rob->row, rob->col + 1)){
+                rob->mode = MODE_EXPLORE;
+                return DIR_RIGHT;
+            }
+            break;
+    }
+
+    // TODO
+    // Check conditions
+    switch(env->plan.dir) {
+        case DIR_TOP:
+            return DIR_BOTTOM;
+            
+        case DIR_BOTTOM:
+            return DIR_TOP;
+            
+        case DIR_LEFT:
+            return DIR_RIGHT;
+            
+        case DIR_RIGHT:
+            return DIR_LEFT;
+    }
+    
     return DIR_NONE;
 }
 
