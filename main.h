@@ -15,7 +15,7 @@ bool readObsts(terra_t*);
 bool readCoord(unsigned int*);
 bool readData(terra_t*);
 void plan(terra_t*);
-void init(terra_t*);
+bool init(terra_t*);
 void loop(terra_t*);
 void clean(terra_t*);
 int main(void);

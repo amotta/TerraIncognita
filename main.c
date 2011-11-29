@@ -458,13 +458,13 @@ void plan(terra_t* env){
     }
 }
 
-void init(terra_t* env){
+bool init(terra_t* env){
     env->map.map = NULL;
     env->robs.map.map = NULL;
     env->obsts.set = NULL;
     
     if(!readData(env)){
-        return;
+        return false;
     }
     
     plan(env);
@@ -472,6 +472,8 @@ void init(terra_t* env){
     if(env->resultMode){
         mapPrint(&env->map);
     }
+    
+    return true;
 }
 
 void loop(terra_t* env){
@@ -511,11 +513,10 @@ void clean(terra_t* env){
 int main(void){
     terra_t env;
     
-    init(&env);
+    if(init(&env)){
+        loop(&env);
+    }
     
-    // TODO
-    // Execute depending on init
-    loop(&env);
     clean(&env);
     
     return EXIT_SUCCESS;
