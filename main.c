@@ -363,21 +363,27 @@ void plan(terra_t* env){
             access = env->accessCol;
             env->plan.dir = DIR_BOTTOM;
             break;
+            
         case DIR_BOTTOM:
             dim = env->map.rows;
             access = env->accessCol;
             env->plan.dir = DIR_TOP;
             break;
+            
         case DIR_LEFT:
             dim = env->map.cols;
             access = env->accessRow;
             env->plan.dir = DIR_RIGHT;
             break;
+            
         case DIR_RIGHT:
             dim = env->map.cols;
             access = env->accessRow;
             env->plan.dir = DIR_LEFT;
             break;
+            
+        default:
+            return;
     }
     
     numbRobs = (dim + 1) / 2;
@@ -389,15 +395,17 @@ void plan(terra_t* env){
         env->plan.numbRobs = numbRobs;
     }
     
-    // calculate start position and direction
+    // calculate start position ...
     if(dim - access - 1 > access){
         env->plan.start = 0;
         
+        // ... and direction 
         switch(env->plan.dir){
             case DIR_TOP:
             case DIR_BOTTOM:
                 dir = DIR_RIGHT;
                 break;
+            
             case DIR_LEFT:
             case DIR_RIGHT:
                 dir = DIR_BOTTOM;
@@ -411,6 +419,7 @@ void plan(terra_t* env){
             case DIR_BOTTOM:
                 dir = DIR_LEFT;
                 break;
+                
             case DIR_LEFT:
             case DIR_RIGHT:
                 dir = DIR_TOP;
@@ -425,8 +434,9 @@ void plan(terra_t* env){
         switch(env->plan.dir){
             case DIR_TOP:
             case DIR_LEFT:
-                env->robs.set[r].dist = (dim - 1 - 2 * r);
+                env->robs.set[r].dist = (dim - 2 - 2 * r);
                 break;
+                
             case DIR_BOTTOM:
             case DIR_RIGHT:
                 env->robs.set[r].dist = 1 + 2 * r;
@@ -434,7 +444,18 @@ void plan(terra_t* env){
         }
     }
     
-    env->plan.dist = 2 * env->plan.numbRobs;
+    // dist to next row / col of robot
+    switch(env->plan.dir){
+        case DIR_TOP:
+        case DIR_LEFT:
+            env->plan.dist = - 2 * env->plan.numbRobs;
+            break;
+            
+        case DIR_BOTTOM:
+        case DIR_RIGHT:
+            env->plan.dist = + 2 * env->plan.numbRobs;
+            break;
+    }
 }
 
 void init(terra_t* env){
@@ -491,6 +512,9 @@ int main(void){
     terra_t env;
     
     init(&env);
+    
+    // TODO
+    // Execute depending on init
     loop(&env);
     clean(&env);
     

@@ -58,7 +58,7 @@ typedef struct {
 
 typedef struct {
     unsigned int numbRobs;
-    unsigned int dist;
+    int dist;
     unsigned int start;
     char dir;
 } plan_t;

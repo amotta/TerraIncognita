@@ -21,26 +21,70 @@ void robSpawn(rob_t* rob, terra_t* env){
 
 void robCheckMode(rob_t* rob, terra_t* env){
     switch(rob->mode){
+            
         case MODE_PREPARE:
+            
+            // change to exploration mode when ready
             switch(env->plan.dir){
                 case DIR_TOP:
                 case DIR_BOTTOM:
                     if(rob->col == env->plan.start){
                         rob->mode = MODE_EXPLORE;
                     }
-                    break;
                     
+                    break;
+                
                 case DIR_LEFT:
                 case DIR_RIGHT:
                     if(rob->row == env->plan.start){
                         rob->mode = MODE_EXPLORE;
                     }
+                    
                     break;
             }
             
             break;
             
         case MODE_EXPLORE:
+            
+            // TODO
+            // add final condition
+            
+            // go to next row / col if done
+            switch(rob->dir){
+                case DIR_TOP:
+                    if(rob->row == 0){
+                        rob->dir = DIR_BOTTOM;
+                        rob->dist += env->plan.dist;
+                    }
+                    
+                    break;
+                    
+                case DIR_BOTTOM:
+                    if(rob->row == env->map.rows - 1){
+                        rob->dir = DIR_TOP;
+                        rob->dist += env->plan.dist;
+                    }
+                    
+                    break;
+                    
+                case DIR_LEFT:
+                    if(rob->col == 0){
+                        rob->dir = DIR_RIGHT;
+                        rob->dist += env->plan.dist;
+                    }
+                    
+                    break;
+                    
+                case DIR_RIGHT:
+                    if(rob->col == env->map.cols - 1){
+                        rob->dir = DIR_LEFT;
+                        rob->dist += env->plan.dist;
+                    }
+                    
+                    break;
+            }
+            
             break;
             
         case MODE_AVOID:
@@ -92,7 +136,7 @@ char robThinkExplore(rob_t* rob, terra_t* env){
             }
             
             break;
-        
+            
         case DIR_LEFT:
         case DIR_RIGHT:
             if(rob->col > rob->dist){
@@ -109,10 +153,13 @@ char robThinkExplore(rob_t* rob, terra_t* env){
     switch(rob->dir){
         case DIR_TOP:
             return DIR_TOP;
+            
         case DIR_BOTTOM:
             return DIR_BOTTOM;
+            
         case DIR_LEFT:
             return DIR_LEFT;
+            
         case DIR_RIGHT:
             return DIR_RIGHT;
     }
@@ -148,12 +195,15 @@ void robMove(rob_t* rob, char dir, terra_t* env){
         case DIR_TOP:
             newRow--;
             break;
+            
         case DIR_BOTTOM:
             newRow++;
             break;
+            
         case DIR_LEFT:
             newCol--;
             break;
+            
         case DIR_RIGHT:
             newCol++;
             break;
