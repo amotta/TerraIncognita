@@ -1,1 +1,3 @@
 * Create conversion function DIR to array.
+* Get rid of robCheckMode (move to robThink functions)
+* Remove global collision test in robMove
