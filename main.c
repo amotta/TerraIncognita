@@ -386,7 +386,7 @@ void plan(terra_t* env){
             return;
     }
     
-    numbRobs = (dim + 1) / 2;
+    numbRobs = dim / 2;
     
     // not enough robots?
     if(numbRobs > env->robs.length){
