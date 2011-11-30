@@ -45,6 +45,9 @@ void robCheckMode(rob_t* rob, terra_t* env){
         case MODE_EXPLORE:
             
             // TODO
+            // Move to top of robThinkExplore	
+            
+            // TODO
             // add final condition
             
             // go to next row / col if done
@@ -150,6 +153,7 @@ char robThinkExplore(rob_t* rob, terra_t* env){
                     if(mapIsEmpty(&env->robs.map, rob->row, rob->col + 1)){
                         return DIR_RIGHT;
                     }
+                    break;
             }
             
             break;
@@ -180,6 +184,7 @@ char robThinkExplore(rob_t* rob, terra_t* env){
                     if(mapIsEmpty(&env->robs.map, rob->row + 1, rob->col)){
                         return DIR_BOTTOM;
                     }
+                    break;
             }
 
             break;
@@ -192,8 +197,6 @@ char robThinkExplore(rob_t* rob, terra_t* env){
 }
 
 char robThinkAvoid(rob_t* rob, terra_t* env){
-    // TODO
-    // Move this to robChangeMode
     switch(rob->dir){
         case DIR_TOP:
             if(mapIsEmpty(&env->robs.map, rob->row - 1, rob->col)){
