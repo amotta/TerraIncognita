@@ -355,30 +355,35 @@ void plan(terra_t* env){
     unsigned int dir;
     unsigned int dim;
     unsigned int access;
+    unsigned int accessDim;
     unsigned int numbRobs;
     
     switch(pointGetBorder(env->accessRow, env->accessCol, &env->map)){
         case DIR_TOP:
             dim = env->map.rows;
             access = env->accessCol;
+            accessDim = env->map.cols;
             env->plan.dir = DIR_BOTTOM;
             break;
             
         case DIR_BOTTOM:
             dim = env->map.rows;
             access = env->accessCol;
+            accessDim = env->map.cols;
             env->plan.dir = DIR_TOP;
             break;
             
         case DIR_LEFT:
             dim = env->map.cols;
             access = env->accessRow;
+            accessDim = env->map.rows;
             env->plan.dir = DIR_RIGHT;
             break;
             
         case DIR_RIGHT:
             dim = env->map.cols;
             access = env->accessRow;
+            accessDim = env->map.rows;
             env->plan.dir = DIR_LEFT;
             break;
             
@@ -396,7 +401,7 @@ void plan(terra_t* env){
     }
     
     // calculate start position ...
-    if(dim - access - 1 > access){
+    if(accessDim - access - 1 > access){
         env->plan.start = 0;
         
         // ... and direction 
@@ -412,7 +417,7 @@ void plan(terra_t* env){
                 break;
         }
     }else{
-        env->plan.start = dim - 1;
+        env->plan.start = accessDim - 1;
         
         switch(env->plan.dir){
             case DIR_TOP:
