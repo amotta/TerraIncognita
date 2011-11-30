@@ -46,6 +46,7 @@ typedef struct {
     unsigned int col;
     char dir;
     char mode;
+    bool modeChanged;
 } rob_t;
 
 typedef struct {
