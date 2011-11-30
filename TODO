@@ -1,3 +1,4 @@
 * Create conversion function DIR to array.
 * Get rid of robCheckMode (move to robThink functions)
 * Remove global collision test in robMove
+* Robs should not be able to quit field at the end.
