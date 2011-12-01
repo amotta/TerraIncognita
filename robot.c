@@ -23,55 +23,48 @@ char robThinkPrepare(rob_t* rob, terra_t* env){
     switch(env->plan.dir){
         case DIR_TOP:
         case DIR_BOTTOM:
-            if(
-               rob->col > env->plan.start
-               && mapIsEmpty(&env->robs.map, rob->row, rob->col - 1)
-            ){
+            if(rob->col > env->plan.start && robCanMove(rob, DIR_LEFT, env)){
                 return DIR_LEFT;
             }
             
-            if(
-               rob->col < env->plan.start
-               && mapIsEmpty(&env->robs.map, rob->row, rob->col + 1)
-            ){
+            if(rob->col < env->plan.start && robCanMove(rob, DIR_RIGHT, env)){
                 return DIR_RIGHT;
             }
             
             if(rob->col == env->plan.start){
-                rob->mode = MODE_EXPLORE;
-                rob->modeChanged = true;
+                return robThinkExplore(rob, env);
             }
             
             break;
             
         case DIR_LEFT:
         case DIR_RIGHT:
-            if(
-               rob->row > env->plan.start
-               && mapIsEmpty(&env->robs.map, rob->row - 1, rob->col)
-            ){
+            if(rob->row > env->plan.start && robCanMove(rob, DIR_TOP, env)){
                 return DIR_TOP;
             }
             
-            if(
-               rob->row < env->plan.start
-               && mapIsEmpty(&env->robs.map, rob->row + 1, rob->col)
-            ){
+            if(rob->row < env->plan.start && robCanMove(rob, DIR_BOTTOM, env)){
                 return DIR_BOTTOM;
             }
             
             if(rob->row == env->plan.start){
-                rob->mode = MODE_EXPLORE;
-                rob->modeChanged = true;
+                return robThinkExplore(rob, env);
             }
             
             break;
     }
     
-    return DIR_NONE;
+    // in case we end up here:
+    // we're not on correct row but
+    // we can't move either
+    //
+    // What we do?
+    return robThinkExplore(rob, env);
 }
 
 char robThinkExplore(rob_t* rob, terra_t* env){
+    rob->mode = MODE_EXPLORE;
+    
     // TODO
     // add final condition
     
