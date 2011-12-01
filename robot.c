@@ -19,19 +19,6 @@ void robSpawn(rob_t* rob, terra_t* env){
     mapExplore(&env->robs.map, &env->map, rob->row, rob->col);
 }
 
-void robCheckMode(rob_t* rob, terra_t* env){
-    switch(rob->mode){
-        case MODE_PREPARE:
-            break;
-            
-        case MODE_EXPLORE:
-            break;
-            
-        case MODE_AVOID:
-            break;
-    }
-}
-
 char robThinkPrepare(rob_t* rob, terra_t* env){
     switch(env->plan.dir){
         case DIR_TOP:
