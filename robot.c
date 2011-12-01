@@ -258,6 +258,9 @@ void robMove(rob_t* rob, char dir, terra_t* env){
         case DIR_RIGHT:
             newCol++;
             break;
+            
+        default:
+            return;
     }
     
     // explore area
