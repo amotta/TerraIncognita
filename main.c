@@ -505,6 +505,8 @@ void loop(terra_t* env){
             env->robs.active++;
         }
         
+        mapComplete(&env->robs.map, &env->map);
+        
         if(env->resultMode){
             mapPrint(&env->robs.map);
         }

@@ -48,6 +48,14 @@ bool mapIsEmpty(map_t* map, unsigned int row, unsigned col){
     }
 }
 
+bool mapIsObstacle(map_t* map, unsigned int row, unsigned int col){
+    if(mapGet(map, row, col) == FIELD_OBSTACLE){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 void mapExplore(map_t* dest, map_t* src, unsigned int r, unsigned int c){
     if(pointInMap(r - 1, c, dest) && mapGet(dest, r - 1, c) == FIELD_UNKNOWN){
         mapSet(dest, r - 1, c, mapGet(src, r - 1, c)); 
@@ -77,6 +85,32 @@ void mapExploreBorder(map_t* dest, map_t* src){
     for(i = 0; i < dest->cols; i++){
         mapSet(dest, 0, i, mapGet(src, 0, i));
         mapSet(dest, dest->rows - 1, i, mapGet(src, dest->rows - 1, i));
+    }
+}
+
+void mapComplete(map_t* dest, map_t* src){
+    unsigned int r;
+    unsigned int c;
+    
+    for(r = 1; r < dest->rows - 1; r++){
+        for(c = 1; c < dest->cols - 1; c++){
+            mapCompleteField(dest, src, r, c);
+        }
+    }
+}
+
+void mapCompleteField(map_t* dest, map_t* src, unsigned int r, unsigned int c){
+    if(
+        mapGet(dest, r, c) == FIELD_UNKNOWN
+        && (mapIsObstacle(dest, r - 1, c) || mapIsObstacle(dest, r + 1, c))
+        && (mapIsObstacle(dest, r, c - 1) || mapIsObstacle(dest, r, c + 1))
+    ){
+        mapSet(dest, r, c, FIELD_OBSTACLE);
+        
+        mapCompleteField(dest, src, r - 1, c);
+        mapCompleteField(dest, src, r + 1, c);
+        mapCompleteField(dest, src, r, c - 1);
+        mapCompleteField(dest, src, r, c + 1);
     }
 }
 
