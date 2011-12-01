@@ -473,6 +473,7 @@ bool init(terra_t* env){
     }
     
     plan(env);
+    mapExploreBorder(&env->robs.map, &env->map);
     
     if(env->resultMode){
         mapPrint(&env->map);
@@ -496,7 +497,10 @@ void loop(terra_t* env){
             }
         }
         
-        if(env->robs.active < env->plan.numbRobs){
+        if(
+           env->robs.active < env->plan.numbRobs
+           && mapIsEmpty(&env->robs.map, env->accessRow, env->accessCol)
+        ){
             robSpawn(&env->robs.set[env->robs.active], env);
             env->robs.active++;
         }

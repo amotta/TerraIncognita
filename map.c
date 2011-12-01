@@ -66,6 +66,20 @@ void mapExplore(map_t* dest, map_t* src, unsigned int r, unsigned int c){
     }
 }
 
+void mapExploreBorder(map_t* dest, map_t* src){
+    unsigned int i;
+    
+    for(i = 0; i < dest->rows; i++){
+        mapSet(dest, i, 0, mapGet(src, i, 0));
+        mapSet(dest, i, dest->cols - 1, mapGet(src, i, dest->cols - 1));
+    }
+    
+    for(i = 0; i < dest->cols; i++){
+        mapSet(dest, 0, i, mapGet(src, 0, i));
+        mapSet(dest, dest->rows - 1, i, mapGet(src, dest->rows - 1, i));
+    }
+}
+
 void mapAddObstacle(map_t* map, obst_t* obst){
     unsigned int r;
     unsigned int c;
