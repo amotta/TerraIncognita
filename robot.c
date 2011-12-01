@@ -75,10 +75,7 @@ char robThinkExplore(rob_t* rob, terra_t* env){
     // TODO
     // add final condition
     
-    // TODO
-    // Move in other switch
-    
-    // go to next row / col when done with current
+    // go to next row / col when done
     switch(rob->dir){
         case DIR_TOP:
             if(rob->row == 0){
@@ -270,25 +267,20 @@ void robMove(rob_t* rob, char dir, terra_t* env){
             break;
     }
     
-    // only move on empty fields
-    if(mapIsEmpty(&env->robs.map, newRow, newCol)){
-        // explore area
-        mapExplore(&env->robs.map, &env->map, newRow, newCol);
+    // explore area
+    mapExplore(&env->robs.map, &env->map, newRow, newCol);
+    
+    // map old robot position
+    mapSet(
+        &env->robs.map, rob->row, rob->col,
+        mapGet(&env->map, rob->row, rob->col)
+    );
+    
+    // map new robot position
+    mapSet(&env->robs.map, newRow, newCol, FIELD_ROBOT);
         
-        // map old robot position
-        mapSet(
-            &env->robs.map,
-            rob->row,
-            rob->col,
-            mapGet(&env->map, rob->row, rob->col)
-        );
-        
-        // map new robot position
-        mapSet(&env->robs.map, newRow, newCol, FIELD_ROBOT);
-        
-        rob->row = newRow;
-        rob->col = newCol;
-    }
+    rob->row = newRow;
+    rob->col = newCol;
 }
 
 bool robCanMove(rob_t* rob, char dir, terra_t* env){
