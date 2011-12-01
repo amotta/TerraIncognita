@@ -117,30 +117,24 @@ char robThinkExplore(rob_t* rob, terra_t* env){
         case DIR_TOP:
         case DIR_BOTTOM:
             // correct row if needed and possible
-            if(
-               rob->row > rob->dist
-               && mapIsEmpty(&env->robs.map, rob->row - 1, rob->col)
-            ){
+            if(rob->row > rob->dist && robCanMove(rob, DIR_TOP, env)){
                 return DIR_TOP;
             }
             
-            if(
-               rob->row < rob->dist
-               && mapIsEmpty(&env->robs.map, rob->row + 1, rob->col)
-            ){
+            if(rob->row < rob->dist && robCanMove(rob, DIR_BOTTOM, env)){
                 return DIR_BOTTOM;
             }
             
             // assume line correct
             switch(rob->dir) {
                 case DIR_LEFT:
-                    if(mapIsEmpty(&env->robs.map, rob->row, rob->col - 1)){
+                    if(robCanMove(rob, DIR_LEFT, env)){
                         return DIR_LEFT;
                     }
                     break;
                     
                 case DIR_RIGHT:
-                    if(mapIsEmpty(&env->robs.map, rob->row, rob->col + 1)){
+                    if(robCanMove(rob, DIR_RIGHT, env)){
                         return DIR_RIGHT;
                     }
                     break;
@@ -150,28 +144,23 @@ char robThinkExplore(rob_t* rob, terra_t* env){
             
         case DIR_LEFT:
         case DIR_RIGHT:
-            if(
-               rob->col > rob->dist
-               && mapIsEmpty(&env->robs.map, rob->row, rob->col - 1)
-            ){
+            if(rob->col > rob->dist && robCanMove(rob, DIR_LEFT, env)){
                 return DIR_LEFT;
             }
             
-            if(rob->col < rob->dist
-               && mapIsEmpty(&env->robs.map, rob->row, rob->col + 1)
-            ){
+            if(rob->col < rob->dist && robCanMove(rob, DIR_RIGHT, env)){
                 return DIR_RIGHT;
             }
             
             switch(rob->dir){
                 case DIR_TOP:
-                    if(mapIsEmpty(&env->robs.map, rob->row - 1, rob->col)){
+                    if(robCanMove(rob, DIR_TOP, env)){
                         return DIR_TOP;
                     }
                     break;
                     
                 case DIR_BOTTOM:
-                    if(mapIsEmpty(&env->robs.map, rob->row + 1, rob->col)){
+                    if(robCanMove(rob, DIR_BOTTOM, env)){
                         return DIR_BOTTOM;
                     }
                     break;
@@ -179,88 +168,84 @@ char robThinkExplore(rob_t* rob, terra_t* env){
 
             break;
     }
-    
-    // TODO
-    rob->mode = MODE_AVOID;
-    rob->modeChanged = true;
-    
-    return DIR_NONE;
+
+    return robThinkAvoid(rob, env);
 }
 
 char robThinkAvoid(rob_t* rob, terra_t* env){
+    rob->mode = MODE_AVOID;
+    
     switch(rob->dir){
         case DIR_TOP:
-            if(mapIsEmpty(&env->robs.map, rob->row - 1, rob->col)){
+            if(robCanMove(rob, DIR_TOP, env)){
                 rob->mode = MODE_EXPLORE;
                 return DIR_TOP;
             }
             break;
-        
+            
         case DIR_BOTTOM:
-            if(mapIsEmpty(&env->robs.map, rob->row + 1, rob->col)){
+            if(robCanMove(rob, DIR_BOTTOM, env)){
                 rob->mode = MODE_EXPLORE;
                 return DIR_BOTTOM;
             }
             break;
         
         case DIR_LEFT:
-            if(mapIsEmpty(&env->robs.map, rob->row, rob->col - 1)){
+            if(robCanMove(rob, DIR_LEFT, env)){
                 rob->mode = MODE_EXPLORE;
                 return DIR_LEFT;
             }
             break;
         
         case DIR_RIGHT:
-            if(mapIsEmpty(&env->robs.map, rob->row, rob->col + 1)){
+            if(robCanMove(rob, DIR_RIGHT, env)){
                 rob->mode = MODE_EXPLORE;
                 return DIR_RIGHT;
             }
             break;
     }
 
-    // TODO
-    // Check conditions
     switch(env->plan.dir) {
         case DIR_TOP:
-            return DIR_BOTTOM;
+            if(robCanMove(rob, DIR_BOTTOM, env)){
+                return DIR_BOTTOM;
+            }
+            break;
             
         case DIR_BOTTOM:
-            return DIR_TOP;
+            if(robCanMove(rob, DIR_TOP, env)){
+                return DIR_TOP;
+            }
+            break;
             
         case DIR_LEFT:
-            return DIR_RIGHT;
+            if(robCanMove(rob, DIR_RIGHT, env)){
+                return DIR_RIGHT;
+            }
+            break;
             
         case DIR_RIGHT:
-            return DIR_LEFT;
-    }
+            if(robCanMove(rob, DIR_LEFT, env)){
+                return DIR_LEFT;
+            }
+        }
     
     return DIR_NONE;
 }
 
 char robThink(rob_t* rob, terra_t* env){
-    char dir;
-    
-    rob->modeChanged = false;
-    
     switch(rob->mode){
         case MODE_PREPARE:
-            dir = robThinkPrepare(rob, env);
-            break;
+            return robThinkPrepare(rob, env);
             
         case MODE_EXPLORE:
-            dir = robThinkExplore(rob, env);
-            break;
+            return robThinkExplore(rob, env);
             
         case MODE_AVOID:
-            dir = robThinkAvoid(rob, env);
-            break;
+            return robThinkAvoid(rob, env);
     }
     
-    if(rob->modeChanged){
-        dir = robThink(rob, env);
-    }
-    
-    return dir;
+    return DIR_NONE;
 }
 
 void robMove(rob_t* rob, char dir, terra_t* env){
@@ -304,6 +289,48 @@ void robMove(rob_t* rob, char dir, terra_t* env){
         rob->row = newRow;
         rob->col = newCol;
     }
+}
+
+bool robCanMove(rob_t* rob, char dir, terra_t* env){
+    switch(dir){
+        case DIR_TOP:
+            if(
+               rob->row > 0
+               && mapIsEmpty(&env->robs.map, rob->row - 1, rob->col)
+            ){
+                return true;
+            }
+            break;
+            
+        case DIR_BOTTOM:
+            if(
+               rob->row < env->map.rows - 1
+               && mapIsEmpty(&env->robs.map, rob->row + 1, rob->col)
+            ){
+                return true;
+            }
+            break;
+            
+        case DIR_LEFT:
+            if(
+               rob->col > 0
+               && mapIsEmpty(&env->robs.map, rob->row, rob->col - 1)
+            ){
+                return true;
+            }
+            break;
+            
+        case DIR_RIGHT:
+            if(
+               rob->col < env->map.cols - 1
+               && mapIsEmpty(&env->robs.map, rob->row, rob->col + 1)
+            ){
+                return true;
+            }
+            break;
+    }
+               
+    return false;
 }
 
 void robSetInit(robSet_t* set){
