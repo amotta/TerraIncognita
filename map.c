@@ -18,6 +18,7 @@ void mapInit(map_t* map, char fill){
 
 void mapFree(map_t* map){
     free(map->map);
+    map->map = NULL;
 }
 
 char mapGet(map_t* map, unsigned int row, unsigned int col){

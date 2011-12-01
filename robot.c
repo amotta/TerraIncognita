@@ -331,4 +331,5 @@ void robSetInit(robSet_t* set){
 
 void robSetFree(robSet_t* set){
     free(set->set);
+    set->set = NULL;
 }
