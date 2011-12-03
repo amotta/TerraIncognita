@@ -7,6 +7,7 @@
 
 void robInit(rob_t* rob){
     rob->active = false;
+    rob->explored = false;
 }
 
 void robSpawn(rob_t* rob, terra_t* env){
@@ -65,47 +66,99 @@ char robThinkPrepare(rob_t* rob, terra_t* env){
 char robThinkExplore(rob_t* rob, terra_t* env){
     rob->mode = MODE_EXPLORE;
     
-    // TODO
-    // add final condition
-    
     // go to next row / col when done
+    bool next = false;
+    
     switch(rob->dir){
         case DIR_TOP:
             if(rob->row == 0){
+                next = true;
                 rob->dir = DIR_BOTTOM;
-                rob->dist += env->plan.dist;
             }
             
             break;
             
         case DIR_BOTTOM:
             if(rob->row == env->map.rows - 1){
+                next = true;
                 rob->dir = DIR_TOP;
-                rob->dist += env->plan.dist;
             }
             
             break;
             
         case DIR_LEFT:
             if(rob->col == 0){
+                next = true;
                 rob->dir = DIR_RIGHT;
-                rob->dist += env->plan.dist;
             }
             
             break;
             
         case DIR_RIGHT:
             if(rob->col == env->map.cols - 1){
+                next = true;
                 rob->dir = DIR_LEFT;
-                rob->dist += env->plan.dist;
             }
             
             break;
     }
     
+    if(next){
+        switch(rob->globalDir){
+            case DIR_TOP:
+                if(rob->row >= env->plan.dist){
+                    rob->dist -= env->plan.dist;
+                }else if(!rob->explored){
+                    rob->explored = true;
+                    rob->globalDir = DIR_BOTTOM;
+                    rob->dist += env->plan.dist;
+                }else{
+                    rob->dist = 0;
+                }
+                break;
+                
+            case DIR_BOTTOM:
+                if(env->map.rows - rob->row > env->plan.dist){
+                    rob->dist += env->plan.dist;
+                }else if(!rob->explored){
+                    rob->explored = true;
+                    rob->globalDir = DIR_TOP;
+                    rob->dist -= env->plan.dist;
+                }else{
+                    rob->dist = env->map.rows - 1;
+                }
+                break;
+                
+            case DIR_LEFT:
+                if(rob->col >= env->plan.dist){
+                    rob->dist -= env->plan.dist;
+                }else if(!rob->explored){
+                    rob->explored = true;
+                    rob->globalDir = DIR_RIGHT;
+                    rob->dist += env->plan.dist;
+                }else{
+                    rob->dist = 0;
+                }
+                break;
+                
+            case DIR_RIGHT:
+                if(env->map.cols - rob->col > env->plan.dist){
+                    rob->dist += env->plan.dist;
+                }else if(!rob->explored){
+                    rob->explored = true;
+                    rob->globalDir = DIR_LEFT;
+                    rob->dist -= env->plan.dist;
+                }else{
+                    rob->dist = env->map.cols - 1;
+                }
+                break;
+        }
+    }
+    
     switch(rob->globalDir){
         case DIR_TOP:
         case DIR_BOTTOM:
+            
             // correct row if needed and possible
             if(rob->row > rob->dist && robCanMove(rob, DIR_TOP, env)){
                 return DIR_TOP;

@@ -452,17 +452,7 @@ void plan(terra_t* env){
     }
     
     // dist to next row / col of robot
-    switch(globalDir){
-        case DIR_TOP:
-        case DIR_LEFT:
-            env->plan.dist = - 2 * env->plan.numbRobs;
-            break;
-            
-        case DIR_BOTTOM:
-        case DIR_RIGHT:
-            env->plan.dist = + 2 * env->plan.numbRobs;
-            break;
-    }
+    env->plan.dist = 2 * env->plan.numbRobs;
 }
 
 bool init(terra_t* env){

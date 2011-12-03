@@ -60,7 +60,7 @@ typedef struct {
 } robSet_t;
 
 typedef struct {
-    int dist;
+    unsigned int dist;
     unsigned int numbRobs;
     unsigned int start;
 } plan_t;
