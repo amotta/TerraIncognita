@@ -18,7 +18,6 @@
 #define MODE_PREPARE 1
 #define MODE_EXPLORE 2
 #define MODE_AVOID 3
-#define MODE_DONE 4
 
 typedef struct {
     unsigned int rows;
@@ -54,6 +53,7 @@ typedef struct {
 typedef struct {
     map_t map;
     unsigned int active;
+    unsigned int spawned;
     unsigned int planned;
     unsigned int length;
     rob_t* set;

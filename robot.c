@@ -10,7 +10,9 @@ void robInit(rob_t* rob){
     rob->explored = false;
 }
 
-void robSpawn(rob_t* rob, terra_t* env){
+void robSpawn(terra_t* env){
+    rob_t* rob = &env->robs.set[env->robs.spawned];
+    
     rob->active = true;
     rob->row = env->accessRow;
     rob->col = env->accessCol;
@@ -18,6 +20,16 @@ void robSpawn(rob_t* rob, terra_t* env){
     
     mapSet(&env->robs.map, rob->row, rob->col, FIELD_ROBOT);
     mapExplore(&env->robs.map, &env->map, rob->row, rob->col);
+    
+    env->robs.active++;
+    env->robs.spawned++;
+}
+
+void robEvac(rob_t* rob, terra_t* env){
+    rob->active = false;
+    env->robs.active--;
+    
+    mapSet(&env->robs.map, env->accessRow, env->accessCol, FIELD_ACCESS);
 }
 
 char robThinkPrepare(rob_t* rob, terra_t* env){
@@ -277,6 +289,15 @@ char robThinkAvoid(rob_t* rob, terra_t* env){
 }
 
 char robThink(rob_t* rob, terra_t* env){
+    if(
+       rob->explored
+       && rob->row == env->accessRow
+       && rob->col == env->accessCol
+    ){
+        robEvac(rob, env);
+        return DIR_NONE;
+    }
+    
     switch(rob->mode){
         case MODE_PREPARE:
             return robThinkPrepare(rob, env);
@@ -376,6 +397,7 @@ bool robCanMove(rob_t* rob, char dir, terra_t* env){
 
 void robSetInit(robSet_t* set){
     set->active = 0;
+    set->spawned = 0;
     set->planned = 0;
     set->set = (rob_t*) malloc(set->length * sizeof(rob_t));
 
