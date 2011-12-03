@@ -20,7 +20,7 @@ void robSpawn(rob_t* rob, terra_t* env){
 }
 
 char robThinkPrepare(rob_t* rob, terra_t* env){
-    switch(env->plan.dir){
+    switch(rob->globalDir){
         case DIR_TOP:
         case DIR_BOTTOM:
             if(rob->col > env->plan.start && robCanMove(rob, DIR_LEFT, env)){
@@ -103,7 +103,7 @@ char robThinkExplore(rob_t* rob, terra_t* env){
             break;
     }
     
-    switch(env->plan.dir){
+    switch(rob->globalDir){
         case DIR_TOP:
         case DIR_BOTTOM:
             // correct row if needed and possible
@@ -195,7 +195,7 @@ char robThinkAvoid(rob_t* rob, terra_t* env){
             break;
     }
 
-    switch(env->plan.dir) {
+    switch(rob->globalDir) {
         case DIR_TOP:
             if(robCanMove(rob, DIR_BOTTOM, env)){
                 return DIR_BOTTOM;

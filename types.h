@@ -42,10 +42,12 @@ typedef struct {
 
 typedef struct {
     bool active;
+    bool explored;
     unsigned int dist;
     unsigned int row;
     unsigned int col;
     char dir;
+    char globalDir;
     char mode;
 } rob_t;
 
@@ -58,10 +60,9 @@ typedef struct {
 } robSet_t;
 
 typedef struct {
-    unsigned int numbRobs;
     int dist;
+    unsigned int numbRobs;
     unsigned int start;
-    char dir;
 } plan_t;
 
 typedef struct {

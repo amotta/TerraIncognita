@@ -351,6 +351,7 @@ bool readData(terra_t* env){
 }
 
 void plan(terra_t* env){
+    char globalDir;
     unsigned int r;
     unsigned int dir;
     unsigned int dim;
@@ -363,28 +364,28 @@ void plan(terra_t* env){
             dim = env->map.rows;
             access = env->accessCol;
             accessDim = env->map.cols;
-            env->plan.dir = DIR_BOTTOM;
+            globalDir = DIR_BOTTOM;
             break;
             
         case DIR_BOTTOM:
             dim = env->map.rows;
             access = env->accessCol;
             accessDim = env->map.cols;
-            env->plan.dir = DIR_TOP;
+            globalDir = DIR_TOP;
             break;
             
         case DIR_LEFT:
             dim = env->map.cols;
             access = env->accessRow;
             accessDim = env->map.rows;
-            env->plan.dir = DIR_RIGHT;
+            globalDir = DIR_RIGHT;
             break;
             
         case DIR_RIGHT:
             dim = env->map.cols;
             access = env->accessRow;
             accessDim = env->map.rows;
-            env->plan.dir = DIR_LEFT;
+            globalDir = DIR_LEFT;
             break;
             
         default:
@@ -405,7 +406,7 @@ void plan(terra_t* env){
         env->plan.start = 0;
         
         // ... and direction 
-        switch(env->plan.dir){
+        switch(globalDir){
             case DIR_TOP:
             case DIR_BOTTOM:
                 dir = DIR_RIGHT;
@@ -419,7 +420,7 @@ void plan(terra_t* env){
     }else{
         env->plan.start = accessDim - 1;
         
-        switch(env->plan.dir){
+        switch(globalDir){
             case DIR_TOP:
             case DIR_BOTTOM:
                 dir = DIR_LEFT;
@@ -435,8 +436,9 @@ void plan(terra_t* env){
     // calculate rob position
     for(r = 0; r < env->plan.numbRobs; r++){
         env->robs.set[r].dir = dir;
+        env->robs.set[r].globalDir = globalDir;
         
-        switch(env->plan.dir){
+        switch(globalDir){
             case DIR_TOP:
             case DIR_LEFT:
                 env->robs.set[r].dist = (dim - 2 - 2 * r);
@@ -450,7 +452,7 @@ void plan(terra_t* env){
     }
     
     // dist to next row / col of robot
-    switch(env->plan.dir){
+    switch(globalDir){
         case DIR_TOP:
         case DIR_LEFT:
             env->plan.dist = - 2 * env->plan.numbRobs;
