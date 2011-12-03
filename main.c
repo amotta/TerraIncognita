@@ -484,22 +484,26 @@ bool init(terra_t* env){
 
 void loop(terra_t* env){
     unsigned int r;
+    bool done = false;
+    rob_t* rob = NULL;
     
-    // TODO
-    // while(!isComplete(&map)){
-    while(true){
-        for(r = 0; r < env->robs.active; r++){
-            robMove(&env->robs.set[r], robThink(&env->robs.set[r], env), env);
+    while(!done){
+        for(r = 0; r < env->plan.numbRobs; r++){
+            rob = &env->robs.set[r];
+            
+            if(rob->active && rob->mode != MODE_DONE){
+                robMove(rob, robThink(rob, env), env);
+            }
         }
         
         if(
            env->robs.active < env->plan.numbRobs
            && mapIsEmpty(&env->robs.map, env->accessRow, env->accessCol)
         ){
-            robSpawn(&env->robs.set[env->robs.active], env);
-            env->robs.active++;
+            robSpawn(&env->robs.set[env->robs.active++], env);
         }
         
+        // try to complete map using rules
         mapComplete(&env->robs.map, &env->map);
         
         if(env->resultMode){

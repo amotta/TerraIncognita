@@ -18,6 +18,7 @@
 #define MODE_PREPARE 1
 #define MODE_EXPLORE 2
 #define MODE_AVOID 3
+#define MODE_DONE 4
 
 typedef struct {
     unsigned int rows;
