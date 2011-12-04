@@ -479,7 +479,9 @@ void loop(terra_t* env){
     bool done = false;
     rob_t* rob = NULL;
     
-    while(!done){
+    env->numbCycles = 0;
+    
+    while(!done && env->numbCycles < 2 * env->map.length){
         done = true;
         
         for(r = 0; r < env->plan.numbRobs; r++){
@@ -509,7 +511,7 @@ void loop(terra_t* env){
             mapPrint(&env->robs.map);
         }
         
-        getchar();
+        env->numbCycles++;
     }
 }
 

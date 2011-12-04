@@ -74,6 +74,7 @@ typedef struct {
     bool resultMode;
     unsigned int accessRow;
     unsigned int accessCol;
+    unsigned int numbCycles;
 } terra_t;
 
 #endif
