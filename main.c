@@ -515,6 +515,30 @@ void loop(terra_t* env){
     }
 }
 
+void stats(terra_t* env){
+    printf("\n");
+    
+    if(env->numbCycles <= env->map.length){
+        printf("SUCCESS\n");
+    }else if(env->numbCycles <= 2 * env->map.length){
+        printf("CONSTRUCTION TIMEOUT\n");
+    }else{
+        printf("EVACUATION TIMEOUT\n");
+    }
+    
+    printf("Number of robots: %d\n", env->plan.numbRobs);
+    printf("Number of cycles: %d\n", env->numbCycles);
+    
+    printf(
+        "%ud / %ud / %ud\n",
+        mapFieldsAnalyzed(&env->robs.map),
+        mapFieldsNotObst(&env->robs.map),
+        env->robs.map.length
+    );
+}
+    
+
+
 void clean(terra_t* env){
     mapFree(&env->map);
     mapFree(&env->robs.map);
@@ -526,6 +550,7 @@ int main(void){
     
     if(init(&env)){
         loop(&env);
+        stats(&env);
     }
     
     clean(&env);

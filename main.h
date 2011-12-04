@@ -17,6 +17,7 @@ bool readData(terra_t*);
 void plan(terra_t*);
 bool init(terra_t*);
 void loop(terra_t*);
+void stats(terra_t*);
 void clean(terra_t*);
 int main(void);
 

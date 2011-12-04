@@ -39,21 +39,6 @@ void mapSet(map_t* map, unsigned int row, unsigned int col, char set){
     }
 }
 
-bool mapIsComplete(map_t* map){
-    unsigned int r;
-    unsigned int c;
-    
-    for(r = 0; r < map->rows; r++){
-        for(c = 0; c < map->cols; c++){
-            if(mapGet(map, r, c) == FIELD_UNKNOWN){
-                return false;
-            }
-        }
-    }
-               
-    return true;
-}
-
 bool mapIsEmpty(map_t* map, unsigned int row, unsigned col){
     char field = mapGet(map, row, col);
     
@@ -164,4 +149,43 @@ void mapPrint(map_t* map){
     }
     
     putchar('\n');
+}
+
+unsigned int mapFieldsAnalyzed(map_t* map){
+    unsigned int r;
+    unsigned int c;
+    unsigned analyzed = 0;
+    
+    for(r = 0; r < map->rows; r++){
+        for(c = 0; c < map->cols; c++){
+            switch(mapGet(map, r, c)){
+                case FIELD_UNKNOWN:
+                    break;
+                default:
+                    analyzed++;
+            }
+        }
+    }
+    
+    return analyzed;
+}
+
+unsigned int mapFieldsNotObst(map_t* map){
+    unsigned int r;
+    unsigned int c;
+    unsigned notObsts = 0;
+    
+    for(r = 0; r < map->rows; r++){
+        for(c = 0; c < map->cols; c++){
+            switch(mapGet(map, r, c)){
+                case FIELD_UNKNOWN:
+                case FIELD_OBSTACLE:
+                    break;
+                default:
+                    notObsts++;
+            }
+        }
+    }
+    
+    return notObsts;
 }
