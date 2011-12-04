@@ -530,7 +530,7 @@ void stats(terra_t* env){
     printf("Number of cycles: %d\n", env->numbCycles);
     
     printf(
-        "%ud / %ud / %ud\n",
+        "%u / %u / %u\n",
         mapFieldsAnalyzed(&env->robs.map),
         mapFieldsNotObst(&env->robs.map),
         env->robs.map.length
