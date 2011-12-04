@@ -7,6 +7,7 @@ void mapInit(map_t*, char);
 void mapFree(map_t*);
 char mapGet(map_t*, unsigned int, unsigned int);
 void mapSet(map_t*, unsigned int, unsigned int, char);
+bool mapIsComplete(map_t* map);
 bool mapIsEmpty(map_t* map, unsigned int row, unsigned int col);
 bool mapIsObstacle(map_t* map, unsigned int row, unsigned int col);
 void mapExplore(map_t* dest, map_t* src, unsigned int r, unsigned int c);
