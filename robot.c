@@ -279,6 +279,7 @@ char robThinkAvoid(rob_t* rob, terra_t* env){
             if(robCanMove(rob, DIR_LEFT, env)){
                 return DIR_LEFT;
             }
+            break;
         }
     
     return DIR_NONE;
