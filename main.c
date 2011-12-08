@@ -514,6 +514,10 @@ void loop(terra_t* env){
         if(numbCycles == env->map.length){
             if(mapIsComplete(&env->robs.map)){
                 limitCycles = 2 * env->map.length;
+                
+                for(r = 0; r < env->plan.numbRobs; r++){
+                    robReturn(&env->robs.set[r], env);
+                }
             }else{
                 done = true;
                 result = CONSTR_TIMEOUT;
@@ -539,12 +543,16 @@ void stats(terra_t* env){
     
     printf("\n");
     
-    if(env->numbCycles <= env->map.length){
-        printf("> SUCCESS\n");
-    }else if(env->numbCycles <= 2 * env->map.length){
-        printf("> CONSTRUCTION TIMEOUT\n");
-    }else{
-        printf("> EVACUATION TIMEOUT\n");
+    switch(env->result){
+        case SUCCESS:
+            printf("> SUCCESS\n");
+            break;
+        case CONSTR_TIMEOUT:
+            printf("> CONSTRUCTION TIMEOUT\n");
+            break;
+        case EVAC_TIMEOUT:
+            printf("> EVACUATION TIMEOUT\n");
+            break;
     }
     
     printf("\n");

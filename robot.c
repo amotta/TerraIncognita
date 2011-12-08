@@ -25,6 +25,36 @@ void robSpawn(terra_t* env){
     env->robs.spawned++;
 }
 
+void robReturn(rob_t* rob, terra_t* env){
+    if(rob->explored){
+        return;
+    }
+    
+    rob->explored = true;
+    switch(rob->globalDir){
+        case DIR_TOP:
+            rob->dist = env->accessRow;
+            rob->globalDir = DIR_BOTTOM;
+            break;
+            
+        case DIR_BOTTOM:
+            rob->dist = 0;
+            rob->globalDir = DIR_TOP;
+            break;
+            
+        case DIR_LEFT:
+            rob->dist = env->accessCol;
+            rob->globalDir = DIR_RIGHT;
+            break;
+            
+        case DIR_RIGHT:
+            rob->dist = 0;
+            rob->globalDir = DIR_LEFT;
+            break;
+    }
+
+}
+
 void robEvac(rob_t* rob, terra_t* env){
     rob->active = false;
     env->robs.active--;
@@ -121,9 +151,7 @@ char robThinkExplore(rob_t* rob, terra_t* env){
                 if(rob->row >= env->plan.dist){
                     rob->dist -= env->plan.dist;
                 }else if(!rob->explored){
-                    rob->explored = true;
-                    rob->dist = env->accessRow;
-                    rob->globalDir = DIR_BOTTOM;
+                    robReturn(rob, env);
                 }
                 break;
                 
@@ -131,9 +159,7 @@ char robThinkExplore(rob_t* rob, terra_t* env){
                 if(env->map.rows - rob->row > env->plan.dist){
                     rob->dist += env->plan.dist;
                 }else if(!rob->explored){
-                    rob->explored = true;
-                    rob->dist = 0;
-                    rob->globalDir = DIR_TOP;
+                    robReturn(rob, env);
                 }
                 break;
                 
@@ -141,9 +167,7 @@ char robThinkExplore(rob_t* rob, terra_t* env){
                 if(rob->col >= env->plan.dist){
                     rob->dist -= env->plan.dist;
                 }else if(!rob->explored){
-                    rob->explored = true;
-                    rob->dist = env->accessCol;
-                    rob->globalDir = DIR_RIGHT;
+                    robReturn(rob, env);
                 }
                 break;
                 
@@ -151,9 +175,7 @@ char robThinkExplore(rob_t* rob, terra_t* env){
                 if(env->map.cols - rob->col > env->plan.dist){
                     rob->dist += env->plan.dist;
                 }else if(!rob->explored){
-                    rob->explored = true;
-                    rob->dist = 0;
-                    rob->globalDir = DIR_LEFT;
+                    robReturn(rob, env);
                 }
                 break;
         }
