@@ -441,12 +441,12 @@ void plan(terra_t* env){
         switch(globalDir){
             case DIR_TOP:
             case DIR_LEFT:
-                env->robs.set[r].dist = (dim - 2 - 2 * r);
+                env->robs.set[r].dist = dim - 2 * (env->plan.numbRobs - r);
                 break;
                 
             case DIR_BOTTOM:
             case DIR_RIGHT:
-                env->robs.set[r].dist = 1 + 2 * r;
+                env->robs.set[r].dist = 2 * (env->plan.numbRobs - r) -1 ;
                 break;
         }
     }
