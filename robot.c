@@ -260,24 +260,32 @@ char robThinkAvoid(rob_t* rob, terra_t* env){
         case DIR_TOP:
             if(robCanMove(rob, DIR_BOTTOM, env)){
                 return DIR_BOTTOM;
+            }else if(robCanMove(rob, DIR_TOP, env)){
+                return DIR_TOP;
             }
             break;
             
         case DIR_BOTTOM:
             if(robCanMove(rob, DIR_TOP, env)){
                 return DIR_TOP;
+            }else if(robCanMove(rob, DIR_BOTTOM, env)){
+                return DIR_BOTTOM;
             }
             break;
             
         case DIR_LEFT:
             if(robCanMove(rob, DIR_RIGHT, env)){
                 return DIR_RIGHT;
+            }else if(robCanMove(rob, DIR_LEFT, env)){
+                return DIR_LEFT;
             }
             break;
             
         case DIR_RIGHT:
             if(robCanMove(rob, DIR_LEFT, env)){
                 return DIR_LEFT;
+            }else if(robCanMove(rob, DIR_RIGHT, env)){
+                return DIR_RIGHT;
             }
             break;
         }
