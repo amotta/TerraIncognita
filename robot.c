@@ -122,9 +122,8 @@ char robThinkExplore(rob_t* rob, terra_t* env){
                     rob->dist -= env->plan.dist;
                 }else if(!rob->explored){
                     rob->explored = true;
+                    rob->dist = env->accessRow;
                     rob->globalDir = DIR_BOTTOM;
-                }else{
-                    rob->dist = 0;
                 }
                 break;
                 
@@ -133,9 +132,8 @@ char robThinkExplore(rob_t* rob, terra_t* env){
                     rob->dist += env->plan.dist;
                 }else if(!rob->explored){
                     rob->explored = true;
+                    rob->dist = 0;
                     rob->globalDir = DIR_TOP;
-                }else{
-                    rob->dist = env->map.rows - 1;
                 }
                 break;
                 
@@ -144,9 +142,8 @@ char robThinkExplore(rob_t* rob, terra_t* env){
                     rob->dist -= env->plan.dist;
                 }else if(!rob->explored){
                     rob->explored = true;
+                    rob->dist = env->accessCol;
                     rob->globalDir = DIR_RIGHT;
-                }else{
-                    rob->dist = 0;
                 }
                 break;
                 
@@ -155,9 +152,8 @@ char robThinkExplore(rob_t* rob, terra_t* env){
                     rob->dist += env->plan.dist;
                 }else if(!rob->explored){
                     rob->explored = true;
+                    rob->dist = 0;
                     rob->globalDir = DIR_LEFT;
-                }else{
-                    rob->dist = env->map.cols - 1;
                 }
                 break;
         }
