@@ -57,6 +57,21 @@ bool mapIsObstacle(map_t* map, unsigned int row, unsigned int col){
     }
 }
 
+bool mapIsComplete(map_t* map){
+    unsigned int r;
+    unsigned int c;
+    
+    for(r = 0; r < map->rows; r++){
+        for(c = 0; c < map->cols; c++){
+            if(mapGet(map, r, c) == FIELD_UNKNOWN){
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}
+
 void mapExplore(map_t* dest, map_t* src, unsigned int r, unsigned int c){
     if(pointInMap(r - 1, c, dest) && mapGet(dest, r - 1, c) == FIELD_UNKNOWN){
         mapSet(dest, r - 1, c, mapGet(src, r - 1, c)); 

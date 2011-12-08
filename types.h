@@ -19,6 +19,10 @@
 #define MODE_EXPLORE 2
 #define MODE_AVOID 3
 
+#define SUCCESS 1
+#define CONSTR_TIMEOUT 2
+#define EVAC_TIMEOUT 3
+
 typedef struct {
     unsigned int rows;
     unsigned int cols;
@@ -70,10 +74,14 @@ typedef struct {
     plan_t plan;
     robSet_t robs;
     obstSet_t obsts;
+    
     bool dialogMode;
     bool resultMode;
+    
     unsigned int accessRow;
     unsigned int accessCol;
+    
+    char result;
     unsigned int numbCycles;
 } terra_t;
 

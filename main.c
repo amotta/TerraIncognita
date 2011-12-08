@@ -475,15 +475,17 @@ bool init(terra_t* env){
 }
 
 void loop(terra_t* env){
-    unsigned int r;
-    bool done = false;
     rob_t* rob = NULL;
+    bool done = false;
+    char result = SUCCESS;
+    unsigned int numbCycles = 0;
+    unsigned int limitCycles = env->map.length;
     
-    env->numbCycles = 0;
-    
-    while(!done && env->numbCycles < 2 * env->map.length){
+    while(!done && numbCycles < limitCycles){
         done = true;
+        numbCycles++;
         
+        unsigned int r;
         for(r = 0; r < env->plan.numbRobs; r++){
             rob = &env->robs.set[r];
             
@@ -496,30 +498,45 @@ void loop(terra_t* env){
            env->robs.spawned < env->plan.numbRobs
            && mapIsEmpty(&env->robs.map, env->accessRow, env->accessCol)
         ){
-            done = false;
             robSpawn(env);
         }
         
-        if(env->robs.active){
-            done = false;
-        }
-        
-        // try to complete map using rules
         mapComplete(&env->robs.map, &env->map);
         
         if(env->resultMode){
             mapPrint(&env->robs.map);
         }
         
-        env->numbCycles++;
+        if(env->robs.active){
+            done = false;
+        }
+        
+        if(numbCycles == env->map.length){
+            if(mapIsComplete(&env->robs.map)){
+                limitCycles = 2 * env->map.length;
+            }else{
+                done = true;
+                result = CONSTR_TIMEOUT;
+            }
+        }
+        
+        if(numbCycles == 2 * env->map.length){
+            if(env->robs.active){
+                done = true;
+                result = EVAC_TIMEOUT;
+            }
+        }
     }
     
-    if(!env->resultMode){
-        mapPrint(&env->robs.map);
-    }
+    env->result = result;
+    env->numbCycles = numbCycles;
 }
 
 void stats(terra_t* env){
+    if(!env->resultMode){
+        mapPrint(&env->robs.map);
+    }
+    
     printf("\n");
     
     if(env->numbCycles <= env->map.length){
