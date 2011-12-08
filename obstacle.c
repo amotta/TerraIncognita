@@ -67,4 +67,5 @@ void obstSetAdd(obstSet_t* set, obst_t* obst){
 
 void obstSetFree(obstSet_t* set){
     free(set->set);
+    set->set = NULL;
 }
