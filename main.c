@@ -314,18 +314,26 @@ void mapComplete(map_t* dest, map_t* src){
     }
 }
 
-void mapCompleteField(map_t* dest, map_t* src, unsigned int r, unsigned int c){
+void mapCompleteField(
+    map_t* dest, map_t* src, unsigned int row, unsigned int col
+){
     if(
-       mapGet(dest, r, c) == FIELD_UNKNOWN
-       && (mapIsObstacle(dest, r - 1, c) || mapIsObstacle(dest, r + 1, c))
-       && (mapIsObstacle(dest, r, c - 1) || mapIsObstacle(dest, r, c + 1))
-       ){
-        mapSet(dest, r, c, FIELD_OBSTACLE);
+        mapGet(dest, row, col) == FIELD_UNKNOWN
+        && (
+            mapIsObstacle(dest, row - 1, col)
+            || mapIsObstacle(dest, row + 1, col)
+        )
+        && (
+            mapIsObstacle(dest, row, col - 1)
+            || mapIsObstacle(dest, row, col + 1)
+        )
+    ){
+        mapSet(dest, row, col, FIELD_OBSTACLE);
         
-        mapCompleteField(dest, src, r - 1, c);
-        mapCompleteField(dest, src, r + 1, c);
-        mapCompleteField(dest, src, r, c - 1);
-        mapCompleteField(dest, src, r, c + 1);
+        mapCompleteField(dest, src, row - 1, col);
+        mapCompleteField(dest, src, row + 1, col);
+        mapCompleteField(dest, src, row, col - 1);
+        mapCompleteField(dest, src, row, col + 1);
     }
 }
 
