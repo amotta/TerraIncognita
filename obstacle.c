@@ -43,10 +43,10 @@ int obstSetCheck(obstSet_t* set, obst_t* obst){
     
     for(o = 0; o < set->used; o++){
         if(
-           obst->top - 1 <= set->set[o].bottom
-           && obst->bottom + 1 >= set->set[o].top
-           && obst->left - 1 <= set->set[o].right
-           && obst->right + 1 >= set->set[o].left
+           obst->top - 1 <= set->set[o].top
+           && obst->bottom + 1 >= set->set[o].bottom
+           && obst->left - 1 <= set->set[o].left
+           && obst->right + 1 >= set->set[o].right
         ){
             return o;
         }
