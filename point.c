@@ -35,6 +35,5 @@ char pointGetBorder(unsigned int row, unsigned int col, map_t* map){
         return DIR_RIGHT;
     }
     
-    printf("ERROR: Point not on border.\n");
     return DIR_NONE;
 }
